@@ -44,7 +44,46 @@ app.get('/', (req, res) => res.json({ message: 'GuraNeza API', status: 'running'
 // ============================================
 // AUTH ROUTES - MUST BE FIRST
 // ============================================
-app.use('/api/auth', require('./src/routes/auth'));
+// ============================================
+// AUTH CALLBACK - DIRECT
+// ============================================
+app.post('/api/auth/callback', async (req, res) => {
+    try {
+        const { user } = req.body;
+        if (!user || !user.email) return res.status(400).json({ message: 'User data required' });
+
+        const { data: existingUser } = await supabaseAdmin.from('users').select('*').eq('email', user.email).maybeSingle();
+
+        if (existingUser) {
+            const { data: updated } = await supabaseAdmin.from('users').update({
+                google_id: user.id, last_seen: new Date().toISOString()
+            }).eq('id', existingUser.id).select('*, subscription_plan:subscription_plan_id(*)').single();
+            return res.json({ message: 'Login successful', is_new_user: false, user: updated });
+        }
+
+        const { data: freePlan } = await supabaseAdmin.from('subscription_plans').select('id').eq('name', 'Free').single();
+        const { data: newUser } = await supabaseAdmin.from('users').insert({
+            google_id: user.id, email: user.email,
+            display_name: user.user_metadata?.full_name || user.email.split('@')[0],
+            profile_picture_url: user.user_metadata?.avatar_url || null,
+            role: 'user', subscription_plan_id: freePlan?.id || null,
+            subscription_status: 'free', products_count: 0, last_seen: new Date().toISOString()
+        }).select('*, subscription_plan:subscription_plan_id(*)').single();
+        return res.status(201).json({ message: 'Account created', is_new_user: true, user: newUser });
+    } catch (e) { return res.status(500).json({ message: 'Error', error: e.message }); }
+});
+
+app.get('/api/auth/refresh/:user_id', async (req, res) => {
+    try {
+        let { data: user } = await supabaseAdmin.from('users').select('*, subscription_plan:subscription_plan_id(*)').eq('id', req.params.user_id).maybeSingle();
+        if (!user) {
+            const result = await supabaseAdmin.from('users').select('*, subscription_plan:subscription_plan_id(*)').eq('google_id', req.params.user_id).maybeSingle();
+            user = result.data;
+        }
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        return res.json({ message: 'User refreshed', user });
+    } catch (e) { return res.status(500).json({ message: 'Error', error: e.message }); }
+});
 
 app.get('/api/auth/refresh/me', async (req, res) => {
     try { const user = await getUserFromToken(req); if (!user) return res.status(401).json({ message: 'Unauthorized' }); const { data: profile } = await supabaseAdmin.from('users').select('*, subscription_plan:subscription_plan_id(*)').eq('id', user.id).single(); res.json({ user: profile }); }
