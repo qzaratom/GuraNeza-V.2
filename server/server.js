@@ -42,6 +42,16 @@ async function getUserFromToken(req) {
 app.get('/', (req, res) => res.json({ message: 'GuraNeza API', status: 'running' }));
 
 // ============================================
+// AUTH ROUTES - MUST BE FIRST
+// ============================================
+app.use('/api/auth', require('./src/routes/auth'));
+
+app.get('/api/auth/refresh/me', async (req, res) => {
+    try { const user = await getUserFromToken(req); if (!user) return res.status(401).json({ message: 'Unauthorized' }); const { data: profile } = await supabaseAdmin.from('users').select('*, subscription_plan:subscription_plan_id(*)').eq('id', user.id).single(); res.json({ user: profile }); }
+    catch (e) { res.status(500).json({ message: e.message }); }
+});
+
+// ============================================
 // UPLOAD MULTIPLE IMAGES
 // ============================================
 app.post('/api/upload/multiple', (req, res, next) => {
@@ -371,6 +381,11 @@ app.get('/api/subscriptions/my-requests', async (req, res) => {
     } catch (e) { res.json({ requests: [] }); }
 });
 
+app.delete('/api/subscriptions/admin/requests/:id', async (req, res) => {
+    try { const user = await getUserFromToken(req); if (!user || user.role !== 'admin') return res.status(403).json({ message: 'Admin only' }); const { error } = await supabaseAdmin.from('subscription_requests').delete().eq('id', req.params.id); if (error) return res.status(500).json({ message: error.message }); res.json({ message: 'Request deleted' }); }
+    catch (e) { res.status(500).json({ message: 'Error', error: e.message }); }
+});
+
 // ============================================
 // PAYMENT CODE MANAGEMENT
 // ============================================
@@ -419,7 +434,7 @@ app.put('/api/users/:id/role', async (req, res) => {
 });
 
 // ============================================
-// GET USER BY ID (for seller info) - MUST BE BEFORE /api/users (admin route)
+// GET USER BY ID (for seller info)
 // ============================================
 app.get('/api/users/:id', async (req, res) => {
     try {
@@ -555,21 +570,6 @@ app.post('/api/chats/:id/messages', async (req, res) => {
         await supabaseAdmin.from('chats').update({ last_message: content.substring(0, 100), last_message_at: new Date().toISOString() }).eq('id', chat.id);
         res.status(201).json({ message: 'Sent', chat_message: message });
     } catch (e) { res.status(500).json({ message: 'Error', error: e.message }); }
-});
-
-// ============================================
-// AUTH
-// ============================================
-app.get('/api/auth/refresh/me', async (req, res) => {
-    try { const user = await getUserFromToken(req); if (!user) return res.status(401).json({ message: 'Unauthorized' }); const { data: profile } = await supabaseAdmin.from('users').select('*, subscription_plan:subscription_plan_id(*)').eq('id', user.id).single(); res.json({ user: profile }); }
-    catch (e) { res.status(500).json({ message: e.message }); }
-});
-
-app.use('/api/auth', require('./src/routes/auth'));
-
-app.delete('/api/subscriptions/admin/requests/:id', async (req, res) => {
-    try { const user = await getUserFromToken(req); if (!user || user.role !== 'admin') return res.status(403).json({ message: 'Admin only' }); const { error } = await supabaseAdmin.from('subscription_requests').delete().eq('id', req.params.id); if (error) return res.status(500).json({ message: error.message }); res.json({ message: 'Request deleted' }); }
-    catch (e) { res.status(500).json({ message: 'Error', error: e.message }); }
 });
 
 // ============================================
