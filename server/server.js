@@ -490,12 +490,23 @@ app.get('/api/users/:id', async (req, res) => {
 // ============================================
 app.get('/api/users/profile', async (req, res) => {
     try {
-        const user = await getUserFromToken(req);
-        if (!user) return res.status(401).json({ message: 'Unauthorized' });
-        const { data: profile, error } = await supabaseAdmin.from('users').select('*, subscription_plan:subscription_plan_id(*)').eq('id', user.id).single();
-        if (error) return res.status(500).json({ message: 'Error', error: error.message });
+        const token = req.headers.authorization?.split(' ')[1];
+        if (!token) return res.status(401).json({ message: 'No token' });
+        
+        const { data: { user: authUser }, error: authError } = await supabase.auth.getUser(token);
+        if (authError || !authUser) return res.status(401).json({ message: 'Invalid token' });
+        
+        const { data: profile, error } = await supabaseAdmin
+            .from('users')
+            .select('*, subscription_plan:subscription_plan_id(*)')
+            .eq('email', authUser.email)
+            .single();
+        
+        if (error) return res.status(500).json({ message: error.message });
+        if (!profile) return res.status(404).json({ message: 'User not found' });
+        
         res.json({ user: profile });
-    } catch (e) { res.status(500).json({ message: 'Error', error: e.message }); }
+    } catch (e) { res.status(500).json({ message: e.message }); }
 });
 
 app.put('/api/users/profile', async (req, res) => {
