@@ -27,7 +27,6 @@ function LazyImage({ src, alt }) {
   ); 
 }
 
-// Skeleton Product Card - works in both dark and light mode
 function SkeletonCard({ darkMode }) {
   const shimmerBg = darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.06)';
   const shimmerBg2 = darkMode ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.04)';
@@ -192,6 +191,7 @@ function Home() {
           .product-card-pad { padding: 8px !important; }
           .scroll-top-desktop { display: none !important; }
           .scroll-top-mobile { display: flex !important; }
+          .filter-modal { width: 92% !important; maxWidth: 380px !important; padding: 1rem !important; gap: 0.7rem !important; }
         }
         @media (min-width: 769px) {
           .scroll-top-mobile { display: none !important; }
@@ -240,24 +240,82 @@ function Home() {
                 </button>
                 {filterMenuOpen && (<>
                   <div onClick={() => setFilterMenuOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 90, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(3px)' }} />
-                  <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 100, width: 'calc(100% - 2rem)', maxWidth: 420, maxHeight: '85vh', overflowY: 'auto', background: darkMode ? 'rgba(22,22,45,0.98)' : 'rgba(255,255,255,0.98)', backdropFilter: 'blur(24px)', borderRadius: 20, border: `1px solid ${bc}`, boxShadow: '0 24px 64px rgba(0,0,0,0.5)', padding: '1.5rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.2rem' }}><h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: tc }}>Filters</h4><button onClick={() => setFilterMenuOpen(false)} style={{ width: 32, height: 32, borderRadius: 8, border: `1px solid ${bc}`, background: 'transparent', color: tm, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><FiX size={16} /></button></div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                      <div><label style={{ fontSize: '0.65rem', fontWeight: 700, color: tm, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px', display: 'block' }}>Category</label>
-                        <div ref={catDropdownRef} style={{ position: 'relative' }}><button onClick={(e) => { e.stopPropagation(); setCatDropdownOpen(!catDropdownOpen); }} style={{ width: '100%', padding: '11px 14px', borderRadius: 10, border: `1px solid ${bc}`, background: darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)', color: tc, fontSize: '0.78rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}><span>{selectedCategory === "All" ? "All Categories" : selectedCategory}</span><FiChevronDown size={14} style={{ color: ac }} /></button>
-                          {catDropdownOpen && (<div style={{ position: 'absolute', top: 'calc(100% + 5px)', left: 0, right: 0, maxHeight: 200, overflowY: 'auto', background: darkMode ? 'rgba(22,22,45,0.98)' : 'rgba(255,255,255,0.98)', backdropFilter: 'blur(24px)', borderRadius: 10, border: `1px solid ${bc}`, boxShadow: '0 8px 24px rgba(0,0,0,0.4)', zIndex: 10 }}>{allCategories.map(cat => (<div key={cat} onClick={() => { setSelectedCategory(cat); setCatDropdownOpen(false); }} style={{ padding: '10px 14px', cursor: 'pointer', fontSize: '0.75rem', color: selectedCategory === cat ? ac : tc, background: selectedCategory === cat ? abg : 'transparent' }}>{cat === "All" ? "All Categories" : cat}</div>))}</div>)}
-                        </div>
+                  <div className="filter-modal" style={{ 
+                    position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', 
+                    zIndex: 100, width: '100%', maxWidth: 420, maxHeight: '80vh', overflowY: 'auto', 
+                    background: darkMode ? 'rgba(22,22,45,0.98)' : 'rgba(255,255,255,0.98)', 
+                    backdropFilter: 'blur(24px)', borderRadius: 20, border: `1px solid ${bc}`, 
+                    boxShadow: '0 24px 64px rgba(0,0,0,0.5)', padding: '1.2rem',
+                    display: 'flex', flexDirection: 'column', gap: '0.8rem'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.2rem' }}>
+                      <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: tc, margin: 0 }}>Filters</h4>
+                      <button onClick={() => setFilterMenuOpen(false)} style={{ width: 30, height: 30, borderRadius: 8, border: `1px solid ${bc}`, background: 'transparent', color: tm, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><FiX size={14} /></button>
+                    </div>
+
+                    {/* Category */}
+                    <div>
+                      <label style={{ fontSize: '0.62rem', fontWeight: 600, color: tm, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '4px', display: 'block' }}>Category</label>
+                      <div ref={catDropdownRef} style={{ position: 'relative' }}>
+                        <button onClick={(e) => { e.stopPropagation(); setCatDropdownOpen(!catDropdownOpen); }} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: `1px solid ${bc}`, background: darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)', color: tc, fontSize: '0.72rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <span>{selectedCategory === "All" ? "All Categories" : selectedCategory}</span>
+                          <FiChevronDown size={12} style={{ color: ac }} />
+                        </button>
+                        {catDropdownOpen && (
+                          <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, maxHeight: 180, overflowY: 'auto', background: darkMode ? 'rgba(22,22,45,0.98)' : 'rgba(255,255,255,0.98)', backdropFilter: 'blur(24px)', borderRadius: 8, border: `1px solid ${bc}`, boxShadow: '0 8px 24px rgba(0,0,0,0.4)', zIndex: 10 }}>
+                            {allCategories.map(cat => (
+                              <div key={cat} onClick={() => { setSelectedCategory(cat); setCatDropdownOpen(false); }} style={{ padding: '8px 12px', cursor: 'pointer', fontSize: '0.7rem', color: selectedCategory === cat ? ac : tc, background: selectedCategory === cat ? abg : 'transparent' }}>
+                                {cat === "All" ? "All Categories" : cat}
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
-                      <div><label style={{ fontSize: '0.65rem', fontWeight: 700, color: tm, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px', display: 'block' }}>Product Type</label>
-                        <div style={{ display: 'flex', gap: '8px' }}><button onClick={() => setProductTypeFilter(productTypeFilter === 'individual' ? 'all' : 'individual')} style={{ flex: 1, padding: '10px', borderRadius: 10, border: productTypeFilter === 'individual' ? `1.5px solid ${ac}` : `1px solid ${bc}`, background: productTypeFilter === 'individual' ? abg : 'transparent', color: productTypeFilter === 'individual' ? ac : tc, cursor: 'pointer', fontSize: '0.75rem', fontWeight: 500 }}>Individual</button><button onClick={() => setProductTypeFilter(productTypeFilter === 'shop' ? 'all' : 'shop')} style={{ flex: 1, padding: '10px', borderRadius: 10, border: productTypeFilter === 'shop' ? `1.5px solid ${ac}` : `1px solid ${bc}`, background: productTypeFilter === 'shop' ? abg : 'transparent', color: productTypeFilter === 'shop' ? ac : tc, cursor: 'pointer', fontSize: '0.75rem', fontWeight: 500 }}>Shop</button></div>
+                    </div>
+
+                    {/* Product Type */}
+                    <div>
+                      <label style={{ fontSize: '0.62rem', fontWeight: 600, color: tm, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '4px', display: 'block' }}>Product Type</label>
+                      <div style={{ display: 'flex', gap: '6px' }}>
+                        <button onClick={() => setProductTypeFilter(productTypeFilter === 'individual' ? 'all' : 'individual')} 
+                          style={{ flex: 1, padding: '8px', borderRadius: 8, border: productTypeFilter === 'individual' ? `1.5px solid ${ac}` : `1px solid ${bc}`, background: productTypeFilter === 'individual' ? abg : 'transparent', color: productTypeFilter === 'individual' ? ac : tc, cursor: 'pointer', fontSize: '0.7rem', fontWeight: 500 }}>
+                          Individual
+                        </button>
+                        <button onClick={() => setProductTypeFilter(productTypeFilter === 'shop' ? 'all' : 'shop')} 
+                          style={{ flex: 1, padding: '8px', borderRadius: 8, border: productTypeFilter === 'shop' ? `1.5px solid ${ac}` : `1px solid ${bc}`, background: productTypeFilter === 'shop' ? abg : 'transparent', color: productTypeFilter === 'shop' ? ac : tc, cursor: 'pointer', fontSize: '0.7rem', fontWeight: 500 }}>
+                          Shop
+                        </button>
                       </div>
-                      <div><label style={{ fontSize: '0.65rem', fontWeight: 700, color: tm, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px', display: 'block' }}>Other</label>
-                        <button onClick={() => setFilterNegotiable(!filterNegotiable)} style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: filterNegotiable ? `1.5px solid ${ac}` : `1px solid ${bc}`, background: filterNegotiable ? abg : 'transparent', color: filterNegotiable ? ac : tc, cursor: 'pointer', fontSize: '0.75rem', fontWeight: 500, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}><span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FiDollarSign size={14} /> Negotiable</span>{filterNegotiable && <FiCheck size={16} />}</button>
+                    </div>
+
+                    {/* Negotiable */}
+                    <div>
+                      <label style={{ fontSize: '0.62rem', fontWeight: 600, color: tm, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '4px', display: 'block' }}>Other</label>
+                      <button onClick={() => setFilterNegotiable(!filterNegotiable)} 
+                        style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: filterNegotiable ? `1.5px solid ${ac}` : `1px solid ${bc}`, background: filterNegotiable ? abg : 'transparent', color: filterNegotiable ? ac : tc, cursor: 'pointer', fontSize: '0.7rem', fontWeight: 500, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><FiDollarSign size={12} /> Negotiable</span>
+                        {filterNegotiable && <FiCheck size={14} />}
+                      </button>
+                    </div>
+
+                    {/* Price Range */}
+                    <div>
+                      <label style={{ fontSize: '0.62rem', fontWeight: 600, color: tm, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '4px', display: 'block' }}>Price Range (RWF)</label>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <input type="number" placeholder="Min" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} 
+                          style={{ flex: 1, padding: '8px', borderRadius: 8, border: `1px solid ${bc}`, background: darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)', color: tc, fontSize: '0.7rem', outline: 'none', textAlign: 'center' }} />
+                        <span style={{ color: tm, fontSize: '0.65rem' }}>to</span>
+                        <input type="number" placeholder="Max" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} 
+                          style={{ flex: 1, padding: '8px', borderRadius: 8, border: `1px solid ${bc}`, background: darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)', color: tc, fontSize: '0.7rem', outline: 'none', textAlign: 'center' }} />
                       </div>
-                      <div><label style={{ fontSize: '0.65rem', fontWeight: 700, color: tm, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px', display: 'block' }}>Price Range (RWF)</label>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><input type="number" placeholder="Min" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} style={{ flex: 1, padding: '10px', borderRadius: 10, border: `1px solid ${bc}`, background: darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)', color: tc, fontSize: '0.75rem', outline: 'none', textAlign: 'center' }} /><span style={{ color: tm, fontSize: '0.7rem' }}>to</span><input type="number" placeholder="Max" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} style={{ flex: 1, padding: '10px', borderRadius: 10, border: `1px solid ${bc}`, background: darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)', color: tc, fontSize: '0.75rem', outline: 'none', textAlign: 'center' }} /></div>
-                      </div>
-                      <div style={{ display: 'flex', gap: '8px', paddingTop: '12px', borderTop: `1px solid ${bc}` }}><button onClick={() => { resetFilters(); setFilterMenuOpen(false); }} style={{ flex: 1, padding: '10px', borderRadius: 12, border: `1px solid ${bc}`, background: 'transparent', color: tm, cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600 }}>Reset</button><button onClick={() => setFilterMenuOpen(false)} style={{ flex: 2, padding: '10px', borderRadius: 12, border: 'none', background: ac, color: '#000', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 700 }}>Apply Filters</button></div>
+                    </div>
+
+                    {/* Buttons */}
+                    <div style={{ display: 'flex', gap: '6px', paddingTop: '8px', borderTop: `1px solid ${bc}` }}>
+                      <button onClick={() => { resetFilters(); setFilterMenuOpen(false); }} 
+                        style={{ flex: 1, padding: '8px', borderRadius: 10, border: `1px solid ${bc}`, background: 'transparent', color: tm, cursor: 'pointer', fontSize: '0.7rem', fontWeight: 600 }}>Reset</button>
+                      <button onClick={() => setFilterMenuOpen(false)} 
+                        style={{ flex: 2, padding: '8px', borderRadius: 10, border: 'none', background: ac, color: '#000', cursor: 'pointer', fontSize: '0.7rem', fontWeight: 700 }}>Apply Filters</button>
                     </div>
                   </div>
                 </>)}
