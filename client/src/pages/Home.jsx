@@ -27,28 +27,34 @@ function LazyImage({ src, alt }) {
   ); 
 }
 
-// Skeleton Product Card
-function SkeletonCard() {
+// Skeleton Product Card - works in both dark and light mode
+function SkeletonCard({ darkMode }) {
+  const shimmerBg = darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.06)';
+  const shimmerBg2 = darkMode ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.04)';
+  const shimmerBg3 = darkMode ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.08)';
+  const borderColor = darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+  const cardBg = darkMode ? 'rgba(26,26,46,0.4)' : 'rgba(255,255,255,0.95)';
+  
   return (
-    <div style={{ background: 'rgba(26,26,46,0.4)', borderRadius: 16, border: '1px solid rgba(255,255,255,0.06)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ aspectRatio: '1/1', background: 'rgba(255,255,255,0.02)', animation: 'shimmer 1.5s infinite' }} />
+    <div style={{ background: cardBg, borderRadius: 16, border: `1px solid ${borderColor}`, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ aspectRatio: '1/1', background: shimmerBg, animation: 'shimmer 1.5s infinite' }} />
       <div style={{ padding: '10px', flex: 1 }}>
-        <div style={{ width: '80%', height: 14, borderRadius: 4, background: 'rgba(255,255,255,0.03)', marginBottom: 8, animation: 'shimmer 1.5s infinite' }} />
-        <div style={{ width: '100%', height: 10, borderRadius: 4, background: 'rgba(255,255,255,0.02)', marginBottom: 4, animation: 'shimmer 1.5s infinite', animationDelay: '0.2s' }} />
-        <div style={{ width: '60%', height: 10, borderRadius: 4, background: 'rgba(255,255,255,0.02)', marginBottom: 10, animation: 'shimmer 1.5s infinite', animationDelay: '0.3s' }} />
+        <div style={{ width: '80%', height: 14, borderRadius: 4, background: shimmerBg, marginBottom: 8, animation: 'shimmer 1.5s infinite' }} />
+        <div style={{ width: '100%', height: 10, borderRadius: 4, background: shimmerBg2, marginBottom: 4, animation: 'shimmer 1.5s infinite', animationDelay: '0.2s' }} />
+        <div style={{ width: '60%', height: 10, borderRadius: 4, background: shimmerBg2, marginBottom: 10, animation: 'shimmer 1.5s infinite', animationDelay: '0.3s' }} />
         <div style={{ display: 'flex', gap: 4, marginBottom: 8 }}>
-          <div style={{ width: 40, height: 18, borderRadius: 6, background: 'rgba(255,255,255,0.03)', animation: 'shimmer 1.5s infinite' }} />
-          <div style={{ width: 50, height: 18, borderRadius: 6, background: 'rgba(255,255,255,0.03)', animation: 'shimmer 1.5s infinite', animationDelay: '0.15s' }} />
+          <div style={{ width: 40, height: 18, borderRadius: 6, background: shimmerBg, animation: 'shimmer 1.5s infinite' }} />
+          <div style={{ width: 50, height: 18, borderRadius: 6, background: shimmerBg, animation: 'shimmer 1.5s infinite', animationDelay: '0.15s' }} />
         </div>
-        <div style={{ borderTop: '1px dashed rgba(255,255,255,0.04)', paddingTop: 6, display: 'flex', justifyContent: 'space-between' }}>
-          <div style={{ width: 70, height: 16, borderRadius: 4, background: 'rgba(255,255,255,0.04)', animation: 'shimmer 1.5s infinite' }} />
-          <div style={{ width: 40, height: 10, borderRadius: 4, background: 'rgba(255,255,255,0.02)', animation: 'shimmer 1.5s infinite', animationDelay: '0.2s' }} />
+        <div style={{ borderTop: `1px dashed ${darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`, paddingTop: 6, display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ width: 70, height: 16, borderRadius: 4, background: shimmerBg3, animation: 'shimmer 1.5s infinite' }} />
+          <div style={{ width: 40, height: 10, borderRadius: 4, background: shimmerBg2, animation: 'shimmer 1.5s infinite', animationDelay: '0.2s' }} />
         </div>
       </div>
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', padding: '6px 10px' }}>
+      <div style={{ borderTop: `1px solid ${darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`, padding: '6px 10px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          <div style={{ width: 14, height: 14, borderRadius: '50%', background: 'rgba(255,255,255,0.04)', animation: 'shimmer 1.5s infinite' }} />
-          <div style={{ width: 80, height: 10, borderRadius: 4, background: 'rgba(255,255,255,0.03)', animation: 'shimmer 1.5s infinite', animationDelay: '0.1s' }} />
+          <div style={{ width: 14, height: 14, borderRadius: '50%', background: shimmerBg, animation: 'shimmer 1.5s infinite' }} />
+          <div style={{ width: 80, height: 10, borderRadius: 4, background: shimmerBg2, animation: 'shimmer 1.5s infinite', animationDelay: '0.1s' }} />
         </div>
       </div>
     </div>
@@ -170,7 +176,7 @@ function Home() {
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes bagRise { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 5% { opacity: 0.05; } 95% { opacity: 0.05; } 100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes shimmer { 0% { opacity: 0.3; } 50% { opacity: 0.6; } 100% { opacity: 0.3; } }
+        @keyframes shimmer { 0% { opacity: 0.3; } 50% { opacity: 0.7; } 100% { opacity: 0.3; } }
         .card-hover { transition: all 0.2s; }
         .card-hover:hover { transform: translateY(-3px); box-shadow: ${darkMode ? '0 8px 28px rgba(0,0,0,0.35)' : '0 8px 28px rgba(0,0,0,0.08)'}; }
         .badge-circle { transition: all 0.2s; }
@@ -267,7 +273,7 @@ function Home() {
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 12px 40px', width: '100%' }}>
           {loading && products.length === 0 ? (
             <div className="product-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '12px' }}>
-              {[...Array(8)].map((_, i) => <SkeletonCard key={i} />)}
+              {[...Array(8)].map((_, i) => <SkeletonCard key={i} darkMode={darkMode} />)}
             </div>
           ) : products.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '60px 20px', color: tm, background: cbg, backdropFilter: 'blur(16px)', borderRadius: 20, border: `1px solid ${bc}`, boxShadow: shadow }}>
