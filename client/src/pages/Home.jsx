@@ -27,6 +27,34 @@ function LazyImage({ src, alt }) {
   ); 
 }
 
+// Skeleton Product Card
+function SkeletonCard() {
+  return (
+    <div style={{ background: 'rgba(26,26,46,0.4)', borderRadius: 16, border: '1px solid rgba(255,255,255,0.06)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ aspectRatio: '1/1', background: 'rgba(255,255,255,0.02)', animation: 'shimmer 1.5s infinite' }} />
+      <div style={{ padding: '10px', flex: 1 }}>
+        <div style={{ width: '80%', height: 14, borderRadius: 4, background: 'rgba(255,255,255,0.03)', marginBottom: 8, animation: 'shimmer 1.5s infinite' }} />
+        <div style={{ width: '100%', height: 10, borderRadius: 4, background: 'rgba(255,255,255,0.02)', marginBottom: 4, animation: 'shimmer 1.5s infinite', animationDelay: '0.2s' }} />
+        <div style={{ width: '60%', height: 10, borderRadius: 4, background: 'rgba(255,255,255,0.02)', marginBottom: 10, animation: 'shimmer 1.5s infinite', animationDelay: '0.3s' }} />
+        <div style={{ display: 'flex', gap: 4, marginBottom: 8 }}>
+          <div style={{ width: 40, height: 18, borderRadius: 6, background: 'rgba(255,255,255,0.03)', animation: 'shimmer 1.5s infinite' }} />
+          <div style={{ width: 50, height: 18, borderRadius: 6, background: 'rgba(255,255,255,0.03)', animation: 'shimmer 1.5s infinite', animationDelay: '0.15s' }} />
+        </div>
+        <div style={{ borderTop: '1px dashed rgba(255,255,255,0.04)', paddingTop: 6, display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ width: 70, height: 16, borderRadius: 4, background: 'rgba(255,255,255,0.04)', animation: 'shimmer 1.5s infinite' }} />
+          <div style={{ width: 40, height: 10, borderRadius: 4, background: 'rgba(255,255,255,0.02)', animation: 'shimmer 1.5s infinite', animationDelay: '0.2s' }} />
+        </div>
+      </div>
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', padding: '6px 10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <div style={{ width: 14, height: 14, borderRadius: '50%', background: 'rgba(255,255,255,0.04)', animation: 'shimmer 1.5s infinite' }} />
+          <div style={{ width: 80, height: 10, borderRadius: 4, background: 'rgba(255,255,255,0.03)', animation: 'shimmer 1.5s infinite', animationDelay: '0.1s' }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const getPlanPriority = (seller) => {
   if (!seller?.subscription_plan) return 0;
   const plan = seller.subscription_plan;
@@ -142,6 +170,7 @@ function Home() {
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes bagRise { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 5% { opacity: 0.05; } 95% { opacity: 0.05; } 100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shimmer { 0% { opacity: 0.3; } 50% { opacity: 0.6; } 100% { opacity: 0.3; } }
         .card-hover { transition: all 0.2s; }
         .card-hover:hover { transform: translateY(-3px); box-shadow: ${darkMode ? '0 8px 28px rgba(0,0,0,0.35)' : '0 8px 28px rgba(0,0,0,0.08)'}; }
         .badge-circle { transition: all 0.2s; }
@@ -168,7 +197,7 @@ function Home() {
         {floatingBags.map((bag, i) => (<div key={i} style={{ position: 'absolute', left: bag.left, bottom: '-30px', animation: `bagRise ${bag.duration} linear infinite`, animationDelay: bag.delay, opacity: bag.opacity }}><svg width={bag.size} height={bag.size} viewBox="0 0 24 24" fill={darkMode ? "white" : "#0a0a14"}><path d="M16 6l-2-3h-4L8 6H3v15h18V6h-5zM8.5 7l2-3h3l2 3H8.5zM5 19V8h2v11H5zm4 0V8h2v11H9zm4 0V8h2v11h-2zm4 0V8h2v11h-2z"/></svg></div>))}
       </div>
 
-      {/* Scroll to Top - DESKTOP (bottom right, larger) */}
+      {/* Scroll to Top - DESKTOP */}
       {showScrollTop && (
         <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="scroll-top-btn scroll-top-desktop"
           style={{ position: 'fixed', bottom: 28, right: 28, zIndex: 200, width: 48, height: 48, borderRadius: 14, border: `1px solid ${bc}`, background: cbg, backdropFilter: 'blur(16px)', color: ac, cursor: 'pointer', display: 'none', alignItems: 'center', justifyContent: 'center', boxShadow: shadow }}
@@ -178,7 +207,7 @@ function Home() {
         </button>
       )}
 
-      {/* Scroll to Top - MOBILE (bottom right, smaller, above nav bar) */}
+      {/* Scroll to Top - MOBILE */}
       {showScrollTop && (
         <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="scroll-top-btn scroll-top-mobile"
           style={{ position: 'fixed', bottom: 90, right: 12, zIndex: 200, width: 36, height: 36, borderRadius: 10, border: `1px solid ${bc}`, background: cbg, backdropFilter: 'blur(16px)', color: ac, cursor: 'pointer', display: 'none', alignItems: 'center', justifyContent: 'center', boxShadow: shadow }}
@@ -237,7 +266,9 @@ function Home() {
         {/* Products Grid */}
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 12px 40px', width: '100%' }}>
           {loading && products.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '60px 20px' }}><div style={{ width: 32, height: 32, border: `3px solid ${bc}`, borderTopColor: ac, borderRadius: '50%', animation: 'spin 0.7s linear infinite', margin: '0 auto' }} /></div>
+            <div className="product-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '12px' }}>
+              {[...Array(8)].map((_, i) => <SkeletonCard key={i} />)}
+            </div>
           ) : products.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '60px 20px', color: tm, background: cbg, backdropFilter: 'blur(16px)', borderRadius: 20, border: `1px solid ${bc}`, boxShadow: shadow }}>
               <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(0,227,9,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}><FiPackage size={28} style={{ color: ac, opacity: 0.7 }} /></div>
@@ -306,7 +337,13 @@ function Home() {
                 })}
               </div>
               <div ref={loaderRef} style={{ padding: '12px', textAlign: 'center' }}>
-                {loading && <div style={{ width: 20, height: 20, border: `2px solid ${bc}`, borderTopColor: ac, borderRadius: '50%', animation: 'spin 0.7s linear infinite', margin: '0 auto' }} />}
+                {loading && hasMore && (
+                  <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', padding: '20px' }}>
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: ac, animation: 'shimmer 1s infinite' }} />
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: ac, animation: 'shimmer 1s infinite', animationDelay: '0.2s' }} />
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: ac, animation: 'shimmer 1s infinite', animationDelay: '0.4s' }} />
+                  </div>
+                )}
               </div>
             </>
           )}
