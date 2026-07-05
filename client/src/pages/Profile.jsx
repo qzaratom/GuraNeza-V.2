@@ -8,6 +8,37 @@ import {
   FiAward, FiStar, FiShield, FiZap, FiInfo, FiClock, FiPlus, FiGrid
 } from 'react-icons/fi';
 
+function ContactRow({ icon: Icon, label, value, isLink, accent, textMuted, muted }) {
+  const isMuted = muted || false;
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.72rem' }}>
+      <Icon size={13} style={{ color: isMuted ? textMuted : accent, flexShrink: 0 }} />
+      <span style={{ color: textMuted, minWidth: 55, fontSize: '0.65rem' }}>{label}:</span>
+      {isLink ? (
+        <a href={isLink} style={{ color: isMuted ? textMuted : '#00E309', textDecoration: 'none', fontWeight: 500, wordBreak: 'break-all', fontSize: '0.7rem' }}>
+          {value}
+        </a>
+      ) : (
+        <span style={{ fontWeight: 500, color: isMuted ? textMuted : 'inherit', fontSize: '0.7rem' }}>{value}</span>
+      )}
+    </div>
+  );
+}
+
+function StatBox({ icon: Icon, value, label, accent, darkMode, textMuted, textColor }) {
+  return (
+    <div style={{
+      textAlign: 'center', padding: '0.5rem 0.3rem',
+      background: darkMode ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.015)',
+      borderRadius: 10, transition: 'all 0.25s'
+    }}>
+      <Icon size={16} style={{ color: accent, marginBottom: '0.2rem' }} />
+      <p style={{ fontSize: '1rem', fontWeight: 700, color: textColor }}>{value.toLocaleString()}</p>
+      <p style={{ fontSize: '0.52rem', color: textMuted, marginTop: '0.05rem' }}>{label}</p>
+    </div>
+  );
+}
+
 function Profile({ user, setUser }) {
   const navigate = useNavigate();
   const { darkMode } = useTheme();
@@ -48,7 +79,10 @@ function Profile({ user, setUser }) {
         location: p?.location || '',
         bio: p?.bio || '',
       });
-    } catch (e) { console.error(e); }
+    } catch (e) { 
+      console.error('Profile fetch error:', e);
+      showMessage('Failed to load profile', 'error');
+    }
     finally { setLoading(false); }
   };
 
@@ -150,11 +184,13 @@ function Profile({ user, setUser }) {
   const cardBg = darkMode ? 'rgba(26,26,46,0.5)' : 'rgba(255,255,255,0.95)';
   const accent = '#00E309';
   const inputBg = darkMode ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.02)';
+  const abg = darkMode ? 'rgba(0,227,9,0.1)' : 'rgba(0,227,9,0.06)';
 
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh', background: bgColor }}>
         <div style={{ width: 40, height: 40, border: `3px solid ${borderColor}`, borderTopColor: accent, borderRadius: '50%', animation: 'spin 0.6s linear infinite' }} />
+        <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
       </div>
     );
   }
@@ -165,7 +201,8 @@ function Profile({ user, setUser }) {
         <div style={{ textAlign: 'center' }}>
           <FiUser size={48} style={{ color: textMuted, marginBottom: '1rem' }} />
           <h2 style={{ fontSize: '1.3rem', fontWeight: 700 }}>Profile Not Found</h2>
-          <button onClick={() => navigate('/home')} style={{ marginTop: '1rem', padding: '0.6rem 1.5rem', borderRadius: 12, background: accent, color: '#0a0a14', border: 'none', fontWeight: 600, cursor: 'pointer' }}>Go Home</button>
+          <p style={{ color: textMuted, fontSize: '0.8rem', marginBottom: '1rem' }}>Please try logging in again</p>
+          <button onClick={() => navigate('/login')} style={{ padding: '0.6rem 1.5rem', borderRadius: 12, background: accent, color: '#0a0a14', border: 'none', fontWeight: 600, cursor: 'pointer' }}>Go to Login</button>
         </div>
       </div>
     );
@@ -178,13 +215,6 @@ function Profile({ user, setUser }) {
         @keyframes spin{to{transform:rotate(360deg)}}
         @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
         @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-        .tab-btn{position:relative;transition:all 0.2s}
-        .tab-btn::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:${accent};transform:scaleX(0);transition:transform 0.2s}
-        .tab-btn:hover::after{transform:scaleX(1)}
-        .stat-card{transition:all 0.25s}
-        .stat-card:hover{transform:translateY(-3px)}
-        .product-card{transition:all 0.2s}
-        .product-card:hover{transform:translateY(-4px)}
         @media(max-width:768px){
           .profile-layout{grid-template-columns:1fr!important}
           .cover-section{height:130px!important}
@@ -205,7 +235,6 @@ function Profile({ user, setUser }) {
         }
       `}</style>
 
-      {/* Toast */}
       {message && (
         <div style={{
           position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 999,
@@ -237,7 +266,6 @@ function Profile({ user, setUser }) {
           background: `linear-gradient(to top, ${bgColor}, transparent)`
         }} />
 
-        {/* Cover Upload Button - Small and compact */}
         <button
           onClick={() => posterInputRef.current?.click()}
           disabled={uploadingPoster}
@@ -249,10 +277,7 @@ function Profile({ user, setUser }) {
             color: 'white', fontSize: '0.65rem', fontWeight: 500, cursor: 'pointer',
             display: 'flex', alignItems: 'center', gap: '0.25rem',
             transition: 'all 0.2s', whiteSpace: 'nowrap'
-          }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.6)'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.45)'; }}
-        >
+          }}>
           <FiCamera size={12} />
           {uploadingPoster ? '...' : 'Cover'}
         </button>
@@ -265,7 +290,6 @@ function Profile({ user, setUser }) {
         {/* Profile Header */}
         <div className="avatar-wrapper" style={{ display: 'flex', alignItems: 'flex-end', gap: '1rem', marginTop: '-50px', position: 'relative', zIndex: 5, marginBottom: '1.5rem', flexWrap: 'wrap' }}>
           
-          {/* Avatar */}
           <div style={{ position: 'relative', flexShrink: 0 }}>
             <div className="avatar-img" style={{
               width: 100, height: 100, borderRadius: '50%', border: `4px solid ${bgColor}`,
@@ -295,10 +319,9 @@ function Profile({ user, setUser }) {
             <input ref={picInputRef} type="file" accept="image/*" onChange={handleProfilePicUpload} style={{ display: 'none' }} />
           </div>
 
-          {/* Name + Info */}
           <div style={{ flex: 1, paddingBottom: '0.3rem', minWidth: 150 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '0.2rem' }}>
-              <h1 className="name-text" style={{ fontSize: '1.5rem', fontWeight: 800, lineHeight: 1.2 }}>{profile.display_name}</h1>
+              <h1 className="name-text" style={{ fontSize: '1.5rem', fontWeight: 800, lineHeight: 1.2, margin: 0 }}>{profile.display_name}</h1>
               {badges.slice(0, 2).map((badge, i) => (
                 <badge.icon key={i} size={15} style={{ color: badge.color }} title={badge.label} />
               ))}
@@ -306,8 +329,7 @@ function Profile({ user, setUser }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', fontSize: '0.68rem', color: textMuted }}>
               <span style={{
                 fontSize: '0.58rem', fontWeight: 600, color: accent,
-                background: darkMode ? 'rgba(0,227,9,0.1)' : 'rgba(0,227,9,0.06)',
-                padding: '0.12rem 0.4rem', borderRadius: 8
+                background: abg, padding: '0.12rem 0.4rem', borderRadius: 8
               }}>
                 {profile.subscription_plan?.name || 'Free'}
               </span>
@@ -316,7 +338,6 @@ function Profile({ user, setUser }) {
             </div>
           </div>
 
-          {/* Edit Button Desktop */}
           <button onClick={() => setEditing(!editing)} className="edit-btn-desktop"
             style={{
               padding: '0.45rem 1rem', borderRadius: 10, border: `1px solid ${borderColor}`,
@@ -329,7 +350,6 @@ function Profile({ user, setUser }) {
           </button>
         </div>
 
-        {/* Edit Button Mobile - Full width below header */}
         <button onClick={() => setEditing(!editing)} className="edit-btn-mobile"
           style={{
             width: '100%', padding: '0.5rem', borderRadius: 10, border: `1px solid ${borderColor}`,
@@ -347,7 +367,7 @@ function Profile({ user, setUser }) {
             { key: 'profile', label: 'Profile', icon: FiUser },
             { key: 'products', label: 'Products', icon: FiGrid, count: myProducts.length },
           ].map(tab => (
-            <button key={tab.key} onClick={() => setActiveTab(tab.key)} className="tab-btn"
+            <button key={tab.key} onClick={() => setActiveTab(tab.key)}
               style={{
                 padding: '0.6rem 1rem', border: 'none', background: 'transparent',
                 color: activeTab === tab.key ? accent : textMuted,
@@ -371,7 +391,6 @@ function Profile({ user, setUser }) {
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
               
-              {/* Contact Card */}
               <div className="contact-card" style={{ background: cardBg, backdropFilter: 'blur(16px)', borderRadius: 16, border: `1px solid ${borderColor}`, padding: '1.3rem', boxShadow: darkMode ? '0 4px 16px rgba(0,0,0,0.2)' : '0 4px 16px rgba(0,0,0,0.04)' }}>
                 <h3 style={{ fontSize: '0.8rem', fontWeight: 700, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.35rem', color: accent }}>
                   <FiInfo size={15} /> Contact
@@ -411,16 +430,16 @@ function Profile({ user, setUser }) {
                   </div>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
-                    <ContactRow icon={FiMail} label="Email" value={profile.email} isLink={`mailto:${profile.email}`} accent={accent} textMuted={textMuted} />
+                    <ContactRow icon={FiMail} label="Email" value={profile.email} isLink={`mailto:${profile.email}`} accent={accent} textMuted={textMuted} muted={false} />
                     {profile.phone_numbers?.length > 0 ? (
                       profile.phone_numbers.map((phone, i) => (
-                        <ContactRow key={i} icon={FiPhone} label={`Phone ${i + 1}`} value={phone} isLink={`tel:${phone}`} accent={accent} textMuted={textMuted} />
+                        <ContactRow key={i} icon={FiPhone} label={`Phone ${i + 1}`} value={phone} isLink={`tel:${phone}`} accent={accent} textMuted={textMuted} muted={false} />
                       ))
                     ) : (
-                      <ContactRow icon={FiPhone} label="Phone" value="Not added" accent={textMuted} textMuted={textMuted} muted />
+                      <ContactRow icon={FiPhone} label="Phone" value="Not added" accent={accent} textMuted={textMuted} muted={true} />
                     )}
                     <ContactRow icon={FiMapPin} label="Location" value={profile.location || 'Not set'} accent={profile.location ? accent : textMuted} textMuted={textMuted} muted={!profile.location} />
-                    <ContactRow icon={FiCalendar} label="Joined" value={profile.created_at ? new Date(profile.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'} accent={accent} textMuted={textMuted} />
+                    <ContactRow icon={FiCalendar} label="Joined" value={profile.created_at ? new Date(profile.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'} accent={accent} textMuted={textMuted} muted={false} />
                   </div>
                 )}
               </div>
@@ -428,17 +447,15 @@ function Profile({ user, setUser }) {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
               
-              {/* About */}
               <div style={{ background: cardBg, backdropFilter: 'blur(16px)', borderRadius: 16, border: `1px solid ${borderColor}`, padding: '1.3rem', boxShadow: darkMode ? '0 4px 16px rgba(0,0,0,0.2)' : '0 4px 16px rgba(0,0,0,0.04)' }}>
                 <h3 style={{ fontSize: '0.8rem', fontWeight: 700, marginBottom: '0.6rem', display: 'flex', alignItems: 'center', gap: '0.35rem', color: accent }}>
                   <FiUser size={15} /> About
                 </h3>
-                <p style={{ fontSize: '0.75rem', color: textMuted, lineHeight: 1.6 }}>
+                <p style={{ fontSize: '0.75rem', color: textMuted, lineHeight: 1.6, margin: 0 }}>
                   {profile.bio || 'No bio yet. Click Edit to add one.'}
                 </p>
               </div>
 
-              {/* Badges */}
               <div style={{ background: cardBg, backdropFilter: 'blur(16px)', borderRadius: 16, border: `1px solid ${borderColor}`, padding: '1.3rem', boxShadow: darkMode ? '0 4px 16px rgba(0,0,0,0.2)' : '0 4px 16px rgba(0,0,0,0.04)' }}>
                 <h3 style={{ fontSize: '0.8rem', fontWeight: 700, marginBottom: '0.6rem', display: 'flex', alignItems: 'center', gap: '0.35rem', color: accent }}>
                   <FiAward size={15} /> Badges
@@ -459,7 +476,6 @@ function Profile({ user, setUser }) {
                 )}
               </div>
 
-              {/* Stats */}
               <div style={{ background: cardBg, backdropFilter: 'blur(16px)', borderRadius: 16, border: `1px solid ${borderColor}`, padding: '1.3rem', boxShadow: darkMode ? '0 4px 16px rgba(0,0,0,0.2)' : '0 4px 16px rgba(0,0,0,0.04)' }}>
                 <h3 style={{ fontSize: '0.8rem', fontWeight: 700, marginBottom: '0.6rem', color: accent }}>Stats</h3>
                 <div className="stat-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem' }}>
@@ -472,12 +488,12 @@ function Profile({ user, setUser }) {
           </div>
         )}
 
-        {/* PRODUCTS TAB - 2 columns on mobile */}
+        {/* PRODUCTS TAB */}
         {activeTab === 'products' && (
           <div style={{ paddingBottom: '3rem', animation: 'slideUp 0.3s ease' }}>
             {myProducts.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '3rem 1.5rem', background: cardBg, borderRadius: 16, border: `1px solid ${borderColor}` }}>
-                <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(0,227,9,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.8rem' }}>
+                <div style={{ width: 56, height: 56, borderRadius: '50%', background: abg, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.8rem' }}>
                   <FiPackage size={24} style={{ color: accent }} />
                 </div>
                 <h3 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.2rem' }}>No Products Yet</h3>
@@ -490,8 +506,8 @@ function Profile({ user, setUser }) {
             ) : (
               <div className="products-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(185px, 1fr))', gap: '0.8rem' }}>
                 {myProducts.map(product => (
-                  <div key={product.id} onClick={() => navigate(`/products/${product.id}`)} className="product-card"
-                    style={{ background: cardBg, backdropFilter: 'blur(12px)', borderRadius: 14, border: `1px solid ${borderColor}`, overflow: 'hidden', cursor: 'pointer', boxShadow: darkMode ? '0 3px 12px rgba(0,0,0,0.15)' : '0 3px 12px rgba(0,0,0,0.04)' }}>
+                  <div key={product.id} onClick={() => navigate(`/products/${product.id}`)}
+                    style={{ background: cardBg, backdropFilter: 'blur(12px)', borderRadius: 14, border: `1px solid ${borderColor}`, overflow: 'hidden', cursor: 'pointer', boxShadow: darkMode ? '0 3px 12px rgba(0,0,0,0.15)' : '0 3px 12px rgba(0,0,0,0.04)', transition: 'all 0.2s' }}>
                     <div style={{ aspectRatio: '1/1', background: darkMode ? '#0d0d1a' : '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.4rem', position: 'relative' }}>
                       {product.images?.[0] ? (
                         <img src={product.images[0]} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} loading="lazy" />
@@ -508,7 +524,7 @@ function Profile({ user, setUser }) {
                       </span>
                     </div>
                     <div style={{ padding: '0.55rem 0.6rem' }}>
-                      <h4 style={{ fontSize: '0.68rem', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginBottom: '0.2rem' }}>{product.name}</h4>
+                      <h4 style={{ fontSize: '0.68rem', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginBottom: '0.2rem', margin: '0 0 0.2rem 0' }}>{product.name}</h4>
                       <span style={{ fontSize: '0.72rem', fontWeight: 700, color: accent }}>{formatPrice(product.price)}</span>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.3rem', fontSize: '0.52rem', color: textMuted }}>
                         <span style={{ display: 'flex', alignItems: 'center', gap: '0.1rem' }}><FiEye size={8} /> {product.views_count || 0}</span>
@@ -522,37 +538,6 @@ function Profile({ user, setUser }) {
           </div>
         )}
       </div>
-    </div>
-  );
-}
-
-// Helper Components
-function ContactRow({ icon: Icon, label, value, isLink, accent, textMuted, muted }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.72rem' }}>
-      <Icon size={13} style={{ color: accent, flexShrink: 0 }} />
-      <span style={{ color: textMuted, minWidth: 55, fontSize: '0.65rem' }}>{label}:</span>
-      {isLink ? (
-        <a href={isLink} style={{ color: muted ? textMuted : '#00E309', textDecoration: 'none', fontWeight: 500, wordBreak: 'break-all', fontSize: '0.7rem' }}>
-          {value}
-        </a>
-      ) : (
-        <span style={{ fontWeight: 500, color: muted ? textMuted : 'inherit', fontSize: '0.7rem' }}>{value}</span>
-      )}
-    </div>
-  );
-}
-
-function StatBox({ icon: Icon, value, label, accent, darkMode, textMuted, textColor }) {
-  return (
-    <div className="stat-card" style={{
-      textAlign: 'center', padding: '0.5rem 0.3rem',
-      background: darkMode ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.015)',
-      borderRadius: 10
-    }}>
-      <Icon size={16} style={{ color: accent, marginBottom: '0.2rem' }} />
-      <p style={{ fontSize: '1rem', fontWeight: 700, color: textColor }}>{value.toLocaleString()}</p>
-      <p style={{ fontSize: '0.52rem', color: textMuted, marginTop: '0.05rem' }}>{label}</p>
     </div>
   );
 }
