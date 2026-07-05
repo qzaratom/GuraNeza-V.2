@@ -186,12 +186,14 @@ function Home() {
         .cat-scroll::-webkit-scrollbar { height: 0; } .cat-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         .scroll-top-btn { transition: all 0.2s; animation: fadeInUp 0.3s ease; }
         .scroll-top-btn:hover { transform: scale(1.1); }
+        .filter-modal { box-sizing: border-box; }
+        .filter-modal * { box-sizing: border-box; }
         @media (max-width: 768px) { 
           .product-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; } 
           .product-card-pad { padding: 8px !important; }
           .scroll-top-desktop { display: none !important; }
           .scroll-top-mobile { display: flex !important; }
-          .filter-modal { width: 92% !important; maxWidth: 380px !important; padding: 1rem !important; gap: 0.7rem !important; }
+          .filter-modal { width: 92% !important; maxWidth: 360px !important; padding: 1rem !important; }
         }
         @media (min-width: 769px) {
           .scroll-top-mobile { display: none !important; }
@@ -242,11 +244,11 @@ function Home() {
                   <div onClick={() => setFilterMenuOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 90, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(3px)' }} />
                   <div className="filter-modal" style={{ 
                     position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', 
-                    zIndex: 100, width: '100%', maxWidth: 420, maxHeight: '80vh', overflowY: 'auto', 
+                    zIndex: 100, width: '100%', maxWidth: 420, maxHeight: '80vh', overflowY: 'auto', overflowX: 'hidden',
                     background: darkMode ? 'rgba(22,22,45,0.98)' : 'rgba(255,255,255,0.98)', 
                     backdropFilter: 'blur(24px)', borderRadius: 20, border: `1px solid ${bc}`, 
                     boxShadow: '0 24px 64px rgba(0,0,0,0.5)', padding: '1.2rem',
-                    display: 'flex', flexDirection: 'column', gap: '0.8rem'
+                    display: 'flex', flexDirection: 'column', gap: '0.75rem'
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.2rem' }}>
                       <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: tc, margin: 0 }}>Filters</h4>
@@ -301,12 +303,12 @@ function Home() {
                     {/* Price Range */}
                     <div>
                       <label style={{ fontSize: '0.62rem', fontWeight: 600, color: tm, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '4px', display: 'block' }}>Price Range (RWF)</label>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', width: '100%' }}>
                         <input type="number" placeholder="Min" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} 
-                          style={{ flex: 1, padding: '8px', borderRadius: 8, border: `1px solid ${bc}`, background: darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)', color: tc, fontSize: '0.7rem', outline: 'none', textAlign: 'center' }} />
-                        <span style={{ color: tm, fontSize: '0.65rem' }}>to</span>
+                          style={{ flex: 1, minWidth: 0, padding: '8px', borderRadius: 8, border: `1px solid ${bc}`, background: darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)', color: tc, fontSize: '0.7rem', outline: 'none', textAlign: 'center', width: '100%', boxSizing: 'border-box' }} />
+                        <span style={{ color: tm, fontSize: '0.65rem', flexShrink: 0 }}>to</span>
                         <input type="number" placeholder="Max" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} 
-                          style={{ flex: 1, padding: '8px', borderRadius: 8, border: `1px solid ${bc}`, background: darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)', color: tc, fontSize: '0.7rem', outline: 'none', textAlign: 'center' }} />
+                          style={{ flex: 1, minWidth: 0, padding: '8px', borderRadius: 8, border: `1px solid ${bc}`, background: darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)', color: tc, fontSize: '0.7rem', outline: 'none', textAlign: 'center', width: '100%', boxSizing: 'border-box' }} />
                       </div>
                     </div>
 
