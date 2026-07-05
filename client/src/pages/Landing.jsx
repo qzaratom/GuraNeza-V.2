@@ -6,7 +6,7 @@ import logo from '../assets/logo.png';
 import videoGif from '../assets/video.gif';
 import { 
   FiSearch, FiStar, FiShield, FiCheck, FiDollarSign, FiClock, FiEye, FiHeart,
-  FiMapPin, FiArrowRight
+  FiMapPin, FiArrowRight, FiPackage
 } from 'react-icons/fi';
 
 const translations = {
@@ -66,7 +66,6 @@ const translations = {
   },
 };
 
-// Priority score for sorting by subscription plan
 const getPlanPriority = (seller) => {
   if (!seller?.subscription_plan) return 0;
   const plan = seller.subscription_plan;
@@ -79,10 +78,44 @@ const getPlanPriority = (seller) => {
   return score;
 };
 
+// Skeleton Card for landing page
+function SkeletonLandingCard({ darkMode }) {
+  const shimmerBg = darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.06)';
+  const shimmerBg2 = darkMode ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.04)';
+  const borderColor = darkMode ? 'rgba(0,227,9,0.06)' : 'rgba(0,0,0,0.06)';
+  const cardBg = darkMode ? 'rgba(26,26,46,0.6)' : 'rgba(255,255,255,0.95)';
+
+  return (
+    <div style={{ background: cardBg, borderRadius: 16, border: `1px solid ${borderColor}`, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ aspectRatio: '1/1', background: shimmerBg, animation: 'shimmer 1.5s infinite' }} />
+      <div style={{ padding: '10px', flex: 1 }}>
+        <div style={{ width: '80%', height: 14, borderRadius: 4, background: shimmerBg, marginBottom: 8, animation: 'shimmer 1.5s infinite' }} />
+        <div style={{ width: '100%', height: 10, borderRadius: 4, background: shimmerBg2, marginBottom: 4, animation: 'shimmer 1.5s infinite', animationDelay: '0.2s' }} />
+        <div style={{ width: '60%', height: 10, borderRadius: 4, background: shimmerBg2, marginBottom: 10, animation: 'shimmer 1.5s infinite', animationDelay: '0.3s' }} />
+        <div style={{ display: 'flex', gap: 4, marginBottom: 8 }}>
+          <div style={{ width: 40, height: 18, borderRadius: 6, background: shimmerBg, animation: 'shimmer 1.5s infinite' }} />
+          <div style={{ width: 50, height: 18, borderRadius: 6, background: shimmerBg, animation: 'shimmer 1.5s infinite', animationDelay: '0.15s' }} />
+        </div>
+        <div style={{ borderTop: `1px dashed ${darkMode ? 'rgba(0,227,9,0.06)' : 'rgba(0,0,0,0.06)'}`, paddingTop: 6, display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ width: 70, height: 16, borderRadius: 4, background: shimmerBg, animation: 'shimmer 1.5s infinite' }} />
+          <div style={{ width: 40, height: 10, borderRadius: 4, background: shimmerBg2, animation: 'shimmer 1.5s infinite', animationDelay: '0.2s' }} />
+        </div>
+      </div>
+      <div style={{ borderTop: `1px solid ${darkMode ? 'rgba(0,227,9,0.06)' : 'rgba(0,0,0,0.06)'}`, padding: '6px 10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <div style={{ width: 14, height: 14, borderRadius: '50%', background: shimmerBg, animation: 'shimmer 1.5s infinite' }} />
+          <div style={{ width: 80, height: 10, borderRadius: 4, background: shimmerBg2, animation: 'shimmer 1.5s infinite', animationDelay: '0.1s' }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Landing() {
   const { darkMode, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
+  const [productsLoading, setProductsLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -114,15 +147,18 @@ function Landing() {
   const loadingTc = darkMode ? 'white' : '#1a1a2e';
   const loadingTm = darkMode ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)';
 
-  useEffect(() => { fetchData(); const timer = setTimeout(() => setIsLoading(false), 2000); return () => clearTimeout(timer); }, []);
+  useEffect(() => { 
+    fetchData(); 
+    const timer = setTimeout(() => setIsLoading(false), 2000); 
+    return () => clearTimeout(timer); 
+  }, []);
 
-const fetchData = async () => {
+  const fetchData = async () => {
+    setProductsLoading(true);
     try {
-      // Fetch products
       const productsRes = await api.get('/products?limit=50&sort_by=newest');
       let rawProducts = productsRes.data?.products || [];
       
-      // SORT BY SUBSCRIPTION PRIORITY
       rawProducts.sort((a, b) => {
         const priorityA = getPlanPriority(a.seller);
         const priorityB = getPlanPriority(b.seller);
@@ -131,25 +167,18 @@ const fetchData = async () => {
       });
       setProducts(rawProducts);
 
-      // Fetch stats from PUBLIC endpoint
       try {
         const statsRes = await api.get('/public/stats');
         if (statsRes.data?.success && statsRes.data?.stats) {
-          const { users, products, shops } = statsRes.data.stats;
-          console.log('Public Stats:', { users, products, shops });
-          setStats({ users, products, shops });
+          setStats(statsRes.data.stats);
         }
       } catch (e) {
-        console.log('Public stats error:', e.message);
-        // Fallback
-        setStats({ 
-          users: 0, 
-          products: productsRes.data?.total || rawProducts.length, 
-          shops: 0 
-        });
+        setStats({ users: 0, products: productsRes.data?.total || rawProducts.length, shops: 0 });
       }
     } catch (e) {
       console.error('Fetch error:', e);
+    } finally {
+      setProductsLoading(false);
     }
   };
 
@@ -197,6 +226,7 @@ const fetchData = async () => {
       <style>{`
         @keyframes bagRise{0%{transform:translateY(0) rotate(0deg);opacity:0}5%{opacity:.07}95%{opacity:.07}100%{transform:translateY(-110vh) rotate(360deg);opacity:0}}
         @keyframes spin{to{transform:rotate(360deg)}}
+        @keyframes shimmer{0%{opacity:0.3}50%{opacity:0.7}100%{opacity:0.3}}
         .badge-circle{transition:all 0.2s}.badge-circle:hover{transform:scale(1.15)}
         .badge-tooltip{position:absolute;left:22px;top:50%;transform:translateY(-50%);padding:3px 8px;border-radius:5px;font-size:0.5rem;font-weight:700;white-space:nowrap;opacity:0;visibility:hidden;transition:all 0.15s;pointer-events:none;z-index:20}
         .badge-wrapper:hover .badge-tooltip{opacity:1!important;visibility:visible!important}
@@ -206,7 +236,7 @@ const fetchData = async () => {
         @media(min-width:641px){.pg2{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))!important;gap:1rem!important}.hero-btns-mobile{display:none!important}}
       `}</style>
 
-      {/* Loading */}
+      {/* Loading Screen */}
       {isLoading && (
         <div style={{ position:'fixed',inset:0,zIndex:9999,display:'flex',alignItems:'center',justifyContent:'center',background:loadingBg }}>
           <div style={{ position:'relative',textAlign:'center',zIndex:1 }}>
@@ -251,7 +281,7 @@ const fetchData = async () => {
           <p className="hd" style={{ fontSize:'1rem',color:tm,maxWidth:550,margin:'0 auto 2rem',fontWeight:300,lineHeight:1.6 }}>{t("heroDesc")}</p>
           <div className="hide-mobile" style={{ display:'flex',gap:'.6rem',justifyContent:'center',flexWrap:'wrap' }}>
             <Link to="/login" style={{ padding:'.6rem 1.8rem',border:'none',borderRadius:24,color:'#0a0a14',fontSize:'.85rem',fontWeight:600,textDecoration:'none',background:ac }}>{t("startSelling")}</Link>
-            <Link to="/products" style={{ padding:'.6rem 1.8rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.15)'}`,borderRadius:24,color:tc,fontSize:'.85rem',fontWeight:500,textDecoration:'none' }}>{t("browseProducts")}</Link>
+            <Link to="/login" style={{ padding:'.6rem 1.8rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.15)'}`,borderRadius:24,color:tc,fontSize:'.85rem',fontWeight:500,textDecoration:'none' }}>{t("browseProducts")}</Link>
           </div>
           <div className="sr" style={{ display:'flex',gap:'2rem',justifyContent:'center',marginTop:'2rem',flexWrap:'wrap' }}>
             <div style={{ textAlign:'center',minWidth:65 }}><div className="sn" style={{ fontSize:'1.6rem',fontWeight:700,color:ac }}>{displayedStats.users.toLocaleString()}</div><div style={{ fontSize:'.6rem',color:tm,letterSpacing:'.1em',textTransform:'uppercase',marginTop:'.1rem' }}>{t("users")}</div></div>
@@ -260,7 +290,7 @@ const fetchData = async () => {
           </div>
           <div className="hero-btns-mobile" style={{ display:'none',marginTop:'2rem' }}>
             <Link to="/login" style={{ padding:'.6rem 1.8rem',border:'none',borderRadius:24,color:'#0a0a14',fontSize:'.85rem',fontWeight:600,textDecoration:'none',background:ac,display:'inline-block',width:'80%',maxWidth:'280px' }}>{t("startSelling")}</Link>
-            <Link to="/products" style={{ padding:'.6rem 1.8rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.15)'}`,borderRadius:24,color:tc,fontSize:'.85rem',fontWeight:500,textDecoration:'none',display:'inline-block',width:'80%',maxWidth:'280px' }}>{t("browseProducts")}</Link>
+            <Link to="/login" style={{ padding:'.6rem 1.8rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.15)'}`,borderRadius:24,color:tc,fontSize:'.85rem',fontWeight:500,textDecoration:'none',display:'inline-block',width:'80%',maxWidth:'280px' }}>{t("browseProducts")}</Link>
           </div>
         </div>
         <div style={{ position:'absolute',bottom:0,left:0,right:0,height:'30%',background:`linear-gradient(to bottom, transparent, ${bg})`,zIndex:5,pointerEvents:'none' }}/>
@@ -289,10 +319,14 @@ const fetchData = async () => {
         </div>
 
         <div style={{ paddingBottom:'2rem' }}>
-          {filteredProducts.length === 0 ? (
+          {productsLoading ? (
+            <div className="pg pg2" style={{ display:'grid',gap:'1rem' }}>
+              {[...Array(8)].map((_, i) => <SkeletonLandingCard key={i} darkMode={darkMode} />)}
+            </div>
+          ) : filteredProducts.length === 0 ? (
             <div className="pg pg2" style={{ display:'grid',gap:'1rem' }}>
               <div style={{ gridColumn:'1/-1',textAlign:'center',padding:'3rem 1.5rem',color:tm,background:cbg,borderRadius:18,border:`1px solid ${bc}`,boxShadow:shadow }}>
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke={ac} strokeWidth="1.5" style={{ margin:'0 auto .8rem',opacity:.6 }}><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                <FiPackage size={36} style={{ margin:'0 auto .8rem',opacity:.6,color:ac }} />
                 <h3>{products.length===0?t("noProducts"):t("noMatch")}</h3>
                 <p style={{ fontSize:'.75rem',marginTop:'.3rem' }}>{t("tryAdjusting")}</p>
               </div>
@@ -304,7 +338,7 @@ const fetchData = async () => {
                 return (
                   <div key={p.id} onClick={(e) => handleProductClick(e, p.id)} className="card-hover" style={{ background:cbg,backdropFilter:'blur(16px)',borderRadius:16,border:`1px solid ${bc}`,overflow:'hidden',display:'flex',flexDirection:'column',textDecoration:'none',color:tc,boxShadow:shadow,cursor:'pointer' }}>
                     <div style={{ position:'relative',width:'100%',aspectRatio:'1/1',background:darkMode?'#0d0d1a':'#f1f5f9',overflow:'hidden',display:'flex',alignItems:'center',justifyContent:'center' }}>
-                      {p.images?.[0]?<img src={p.images[0]} alt={p.name} style={{ width:'100%',height:'100%',objectFit:'cover' }} loading="lazy"/>:<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke={tm} strokeWidth="1"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>}
+                      {p.images?.[0]?<img src={p.images[0]} alt={p.name} style={{ width:'100%',height:'100%',objectFit:'cover' }} loading="lazy"/>:<FiPackage size={44} style={{ color:tm,opacity:0.15 }}/>}
                       {sellerBadges.length > 0 && (
                         <div style={{ position:'absolute',top:6,left:6,display:'flex',flexDirection:'column',gap:'4px',zIndex:2 }}>
                           {sellerBadges.map((badge,i)=>(
@@ -342,7 +376,7 @@ const fetchData = async () => {
             </div>
           )}
           <div style={{ textAlign:'center',marginTop:'1.5rem' }}>
-            <Link to="/products" style={{ display:'inline-flex',alignItems:'center',gap:'.4rem',padding:'.6rem 2rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.12)'}`,borderRadius:22,color:tc,fontSize:'.8rem',fontWeight:500,textDecoration:'none' }}>{t("viewAll")}<FiArrowRight size={14}/></Link>
+            <Link to="/login" style={{ display:'inline-flex',alignItems:'center',gap:'.4rem',padding:'.6rem 2rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.12)'}`,borderRadius:22,color:tc,fontSize:'.8rem',fontWeight:500,textDecoration:'none' }}>{t("viewAll")}<FiArrowRight size={14}/></Link>
           </div>
         </div>
       </section>
