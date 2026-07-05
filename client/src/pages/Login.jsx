@@ -17,20 +17,11 @@ const translations = {
     or: "or",
     termsText: "By continuing, you agree to our Terms of Service and Privacy Policy",
     signingIn: "Signing you in...",
-    completeProfile: "Complete Your Profile",
-    completeProfileDesc: "Add more details to help buyers and sellers connect with you.",
-    phoneNumber: "Phone Number",
-    phoneNumberPlaceholder: "e.g., +250 7XX XXX XXX",
-    location: "Location",
-    locationPlaceholder: "e.g., Kigali, Rwanda",
-    bio: "Bio",
-    bioPlaceholder: "Tell us a bit about yourself...",
-    saveProfile: "Save Profile",
-    skipForNow: "Skip for now",
+    editProfileNote: "After signing in, you can edit your phone number, location, and bio from your profile page.",
     backToHome: "Back to Home",
     errorConnecting: "Error connecting to server.",
     language: "Language",
-    addDetails: "Add Details",
+    viewProfile: "View Profile",
   },
   fr: {
     welcomeBack: "Bon Retour",
@@ -42,20 +33,11 @@ const translations = {
     or: "ou",
     termsText: "En continuant, vous acceptez nos Conditions.",
     signingIn: "Connexion en cours...",
-    completeProfile: "Complétez Votre Profil",
-    completeProfileDesc: "Ajoutez plus de détails pour aider les acheteurs et vendeurs.",
-    phoneNumber: "Numéro de Téléphone",
-    phoneNumberPlaceholder: "ex: +250 7XX XXX XXX",
-    location: "Adresse",
-    locationPlaceholder: "ex: Kigali, Rwanda",
-    bio: "Bio",
-    bioPlaceholder: "Parlez-nous de vous...",
-    saveProfile: "Enregistrer",
-    skipForNow: "Passer",
+    editProfileNote: "Après connexion, modifiez votre téléphone, adresse et bio depuis votre profil.",
     backToHome: "Retour à l'Accueil",
     errorConnecting: "Erreur de connexion.",
     language: "Langue",
-    addDetails: "Ajouter Détails",
+    viewProfile: "Voir Profil",
   },
   rw: {
     welcomeBack: "Murakaza Neza",
@@ -67,20 +49,11 @@ const translations = {
     or: "cyangwa",
     termsText: "Ukomeje, wemera Amabwiriza yacu.",
     signingIn: "Turakwinjiza...",
-    completeProfile: "Uzuza Umwirondoro Wawe",
-    completeProfileDesc: "Ongeramo ibindi kugira ngo abaguzi n'abagurisha bagere kuri wewe.",
-    phoneNumber: "Numero ya Telefoni",
-    phoneNumberPlaceholder: "urugero: +250 7XX XXX XXX",
-    location: "Aho Uherereye",
-    locationPlaceholder: "urugero: Kigali, Rwanda",
-    bio: "Bio",
-    bioPlaceholder: "Tubwire bike kuri wowe...",
-    saveProfile: "Bika Umwirondoro",
-    skipForNow: "Reka by'igihe",
+    editProfileNote: "Nyuma yo kwinjira, uhindure nimero, aho uherereye na bio bivuye kuri paji yawe.",
     backToHome: "Subira Ahabanza",
     errorConnecting: "Ikosa mu guhuza.",
     language: "Ururimi",
-    addDetails: "Ongeraho Ibindi",
+    viewProfile: "Reba Umwirondoro",
   },
 };
 
@@ -92,12 +65,6 @@ function Login({ setUser }) {
   const [lang, setLang] = useState(() => localStorage.getItem("guraneza_language") || "en");
   const [langOpen, setLangOpen] = useState(false);
   const langRef = useRef(null);
-  
-  const [activeForm, setActiveForm] = useState('login');
-  const [profileData, setProfileData] = useState({ phone_numbers: '', location: '', bio: '' });
-  const [savingProfile, setSavingProfile] = useState(false);
-  const [profileSuccess, setProfileSuccess] = useState('');
-  const [currentUser, setCurrentUser] = useState(null);
 
   const t = (key) => translations[lang]?.[key] || translations.en[key] || key;
   const langLabels = { en: "EN", fr: "FR", rw: "RW" };
@@ -148,63 +115,39 @@ function Login({ setUser }) {
     }
   };
 
-  const handleSaveProfile = async () => {
-    if (!currentUser) return;
-    setSavingProfile(true);
-    setProfileSuccess('');
+  const handleSession = async (session) => {
+    if (!session?.user) return;
+    setLoading(true);
     try {
-      const updates = {};
-      if (profileData.phone_numbers) updates.phone_numbers = [profileData.phone_numbers];
-      if (profileData.location) updates.location = profileData.location;
-      if (profileData.bio) updates.bio = profileData.bio;
-      if (Object.keys(updates).length > 0) {
-        await api.put('/users/profile', updates);
-      }
-      setProfileSuccess('Profile updated!');
-      setTimeout(() => {
-        setUser(prev => ({ ...prev, ...updates }));
+      localStorage.setItem('guraneza_token', session.access_token);
+      const response = await api.post('/auth/callback', {
+        access_token: session.access_token,
+        user: { id: session.user.id, email: session.user.email, user_metadata: session.user.user_metadata }
+      });
+      if (response.data.user) {
+        setUser(response.data.user);
+        // DIRECT TO HOME PAGE - no profile form
         navigate('/home');
-      }, 1500);
-    } catch (e) {
-      setError('Failed to save profile');
+      }
+    } catch (error) {
+      setError(t("errorConnecting"));
     } finally {
-      setSavingProfile(false);
-    }
-  };
-
-  const handleSkip = () => {
-    if (currentUser) {
-      setUser(currentUser);
-      navigate('/home');
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    const handleSession = async (session) => {
-      if (!session?.user) return;
-      setLoading(true);
-      try {
-        localStorage.setItem('guraneza_token', session.access_token);
-        const response = await api.post('/auth/callback', {
-          access_token: session.access_token,
-          user: { id: session.user.id, email: session.user.email, user_metadata: session.user.user_metadata }
-        });
-        if (response.data.user) {
-          setCurrentUser(response.data.user);
-          setUser(response.data.user);
-          if (response.data.is_new_user) setActiveForm('profile');
-          else navigate('/home');
-        }
-      } catch (error) {
-        setError(t("errorConnecting"));
-      } finally {
-        setLoading(false);
+    // Auto-login if already signed in on this browser
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        handleSession(session);
       }
-    };
+    });
 
-    supabase.auth.getSession().then(({ data: { session } }) => handleSession(session));
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN') handleSession(session);
+      if (event === 'SIGNED_IN') {
+        handleSession(session);
+      }
     });
     return () => subscription.unsubscribe();
   }, []);
@@ -241,15 +184,12 @@ function Login({ setUser }) {
       
       <style>{`
         @keyframes bagRise{0%{transform:translateY(0) rotate(0deg);opacity:0}5%{opacity:.05}95%{opacity:.05}100%{transform:translateY(-110vh) rotate(360deg);opacity:0}}
-        @keyframes slideLeft{from{transform:translateX(0);opacity:1}to{transform:translateX(-120%);opacity:0}}
-        @keyframes slideRight{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
         @media (max-width: 480px) {
           .login-card { max-width: 100% !important; }
           .login-banner { height: 120px !important; }
           .login-title { font-size: 1.1rem !important; }
           .login-subtitle { font-size: 0.7rem !important; }
           .login-btn { padding: 0.65rem !important; font-size: 0.78rem !important; }
-          .login-input { padding: 0.5rem 0.7rem !important; font-size: 0.75rem !important; }
           .login-padding { padding: 1.2rem 1.2rem 1rem !important; }
         }
       `}</style>
@@ -310,132 +250,69 @@ function Login({ setUser }) {
             </div>
           </div>
 
-          {/* Form Container */}
-          <div style={{ position: 'relative', minHeight: 360 }}>
-            
-            {/* LOGIN FORM */}
-            <div className="login-padding" style={{ 
-              padding: '1.8rem 1.8rem 1.5rem', textAlign: 'center',
-              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-              transform: activeForm === 'login' ? 'translateX(0)' : 'translateX(-120%)',
-              opacity: activeForm === 'login' ? 1 : 0,
-              position: activeForm === 'login' ? 'relative' : 'absolute',
-              top: 0, left: 0, right: 0
-            }}>
-              <div style={{ marginBottom: '.6rem' }}>
-                <img src={logo} alt="GuraNeza" style={{ width: 40, height: 40, objectFit: 'contain', margin: '0 auto', display: 'block' }} />
-              </div>
-
-              <h1 className="login-title" style={{ fontSize: '1.3rem', fontWeight: 700, color: textColor, marginBottom: '.2rem' }}>{t("welcomeBack")}</h1>
-              <p className="login-subtitle" style={{ fontSize: '.75rem', color: textMuted, fontWeight: 300, marginBottom: '1.2rem' }}>{t("signInToContinue")}</p>
-
-              {error && (
-                <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10, padding: '.5rem .8rem', marginBottom: '.8rem', fontSize: '.65rem', color: '#ef4444' }}>{error}</div>
-              )}
-
-              <button onClick={handleGoogleLogin} disabled={loading}
-                className="login-btn"
-                style={{ width: '100%', padding: '.75rem', borderRadius: 16, border: 'none', background: accentColor, color: '#0a0a14', fontSize: '.85rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.5rem', marginBottom: '.7rem', opacity: loading ? 0.6 : 1 }}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24">
-                  <path fill="#0a0a14" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#0a0a14" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#0a0a14" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#0a0a14" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
-                {t("alreadyHaveAccount")} - {t("signIn")}
-              </button>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem', margin: '.7rem 0' }}>
-                <div style={{ flex: 1, height: 1, background: borderColor }} />
-                <span style={{ fontSize: '.55rem', color: textMuted, textTransform: 'uppercase', letterSpacing: '.1em' }}>{t("or")}</span>
-                <div style={{ flex: 1, height: 1, background: borderColor }} />
-              </div>
-
-              <button onClick={handleGoogleLogin} disabled={loading}
-                className="login-btn"
-                style={{ width: '100%', padding: '.75rem', borderRadius: 16, border: `1px solid ${btnOutlineBorder}`, background: glassBg, backdropFilter: 'blur(12px)', color: textColor, fontSize: '.85rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.5rem', marginBottom: '.7rem', opacity: loading ? 0.6 : 1 }}
-                onMouseEnter={e => { if (!loading) e.currentTarget.style.borderColor = accentColor; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = btnOutlineBorder; }}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24">
-                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
-                {t("dontHaveAccount")} - {t("createAccount")}
-              </button>
-
-              <button onClick={() => setActiveForm('profile')}
-                style={{ background: 'transparent', border: 'none', color: textMuted, fontSize: '0.65rem', cursor: 'pointer', marginTop: '.2rem', display: 'inline-flex', alignItems: 'center', gap: '.25rem' }}
-              >
-                {t("addDetails")} <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </button>
+          {/* LOGIN FORM */}
+          <div className="login-padding" style={{ padding: '1.5rem 1.8rem 1.2rem', textAlign: 'center' }}>
+            <div style={{ marginBottom: '.6rem' }}>
+              <img src={logo} alt="GuraNeza" style={{ width: 40, height: 40, objectFit: 'contain', margin: '0 auto', display: 'block' }} />
             </div>
 
-            {/* PROFILE FORM */}
-            <div className="login-padding" style={{ 
-              padding: '1.8rem 1.8rem 1.5rem', textAlign: 'center',
-              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-              transform: activeForm === 'profile' ? 'translateX(0)' : 'translateX(120%)',
-              opacity: activeForm === 'profile' ? 1 : 0,
-              position: activeForm === 'profile' ? 'relative' : 'absolute',
-              top: 0, left: 0, right: 0
+            <h1 className="login-title" style={{ fontSize: '1.3rem', fontWeight: 700, color: textColor, marginBottom: '.2rem' }}>{t("welcomeBack")}</h1>
+            <p className="login-subtitle" style={{ fontSize: '.75rem', color: textMuted, fontWeight: 300, marginBottom: '1.2rem' }}>{t("signInToContinue")}</p>
+
+            {error && (
+              <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10, padding: '.5rem .8rem', marginBottom: '.8rem', fontSize: '.65rem', color: '#ef4444' }}>{error}</div>
+            )}
+
+            {/* Sign In Button */}
+            <button onClick={handleGoogleLogin} disabled={loading}
+              className="login-btn"
+              style={{ width: '100%', padding: '.75rem', borderRadius: 16, border: 'none', background: accentColor, color: '#0a0a14', fontSize: '.85rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.5rem', marginBottom: '.7rem', opacity: loading ? 0.6 : 1 }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path fill="#0a0a14" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#0a0a14" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#0a0a14" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#0a0a14" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              {t("alreadyHaveAccount")} - {t("signIn")}
+            </button>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem', margin: '.7rem 0' }}>
+              <div style={{ flex: 1, height: 1, background: borderColor }} />
+              <span style={{ fontSize: '.55rem', color: textMuted, textTransform: 'uppercase', letterSpacing: '.1em' }}>{t("or")}</span>
+              <div style={{ flex: 1, height: 1, background: borderColor }} />
+            </div>
+
+            {/* Create Account Button */}
+            <button onClick={handleGoogleLogin} disabled={loading}
+              className="login-btn"
+              style={{ width: '100%', padding: '.75rem', borderRadius: 16, border: `1px solid ${btnOutlineBorder}`, background: glassBg, backdropFilter: 'blur(12px)', color: textColor, fontSize: '.85rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.5rem', marginBottom: '.7rem', opacity: loading ? 0.6 : 1 }}
+              onMouseEnter={e => { if (!loading) e.currentTarget.style.borderColor = accentColor; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = btnOutlineBorder; }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              {t("dontHaveAccount")} - {t("createAccount")}
+            </button>
+
+            {/* Edit Profile Note */}
+            <div style={{ 
+              background: darkMode ? 'rgba(0,227,9,0.04)' : 'rgba(0,227,9,0.03)', 
+              border: `1px solid ${darkMode ? 'rgba(0,227,9,0.1)' : 'rgba(0,227,9,0.08)'}`, 
+              borderRadius: 14, padding: '0.8rem 1rem', marginTop: '0.8rem' 
             }}>
-              <div style={{ marginBottom: '.6rem' }}>
-                <img src={logo} alt="GuraNeza" style={{ width: 36, height: 36, objectFit: 'contain', margin: '0 auto', display: 'block' }} />
+              <div style={{ fontSize: '0.7rem', fontWeight: 600, color: accentColor, marginBottom: '0.2rem' }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ verticalAlign: 'middle', marginRight: '0.3rem' }}>
+                  <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+                </svg>
+                {t("viewProfile")}
               </div>
-
-              <h2 className="login-title" style={{ fontSize: '1.15rem', fontWeight: 700, color: textColor, marginBottom: '.2rem' }}>{t("completeProfile")}</h2>
-              <p className="login-subtitle" style={{ fontSize: '.7rem', color: textMuted, fontWeight: 300, marginBottom: '1rem' }}>{t("completeProfileDesc")}</p>
-
-              {profileSuccess && (
-                <div style={{ background: 'rgba(0,227,9,0.1)', border: '1px solid rgba(0,227,9,0.2)', borderRadius: 10, padding: '.4rem .8rem', marginBottom: '.7rem', fontSize: '.65rem', color: accentColor }}>{profileSuccess}</div>
-              )}
-
-              <div style={{ textAlign: 'left', marginBottom: '.7rem' }}>
-                <label style={{ fontSize: '.65rem', fontWeight: 600, color: textColor, marginBottom: '.25rem', display: 'block' }}>{t("phoneNumber")}</label>
-                <input type="text" value={profileData.phone_numbers} onChange={e => setProfileData(p => ({ ...p, phone_numbers: e.target.value }))} placeholder={t("phoneNumberPlaceholder")}
-                  className="login-input"
-                  style={{ width: '100%', padding: '.6rem .8rem', borderRadius: 12, border: `1px solid ${borderColor}`, background: glassBg, color: textColor, fontSize: '.8rem', outline: 'none', boxSizing: 'border-box', textAlign: 'center' }}
-                />
-              </div>
-
-              <div style={{ textAlign: 'left', marginBottom: '.7rem' }}>
-                <label style={{ fontSize: '.65rem', fontWeight: 600, color: textColor, marginBottom: '.25rem', display: 'block' }}>{t("location")}</label>
-                <input type="text" value={profileData.location} onChange={e => setProfileData(p => ({ ...p, location: e.target.value }))} placeholder={t("locationPlaceholder")}
-                  className="login-input"
-                  style={{ width: '100%', padding: '.6rem .8rem', borderRadius: 12, border: `1px solid ${borderColor}`, background: glassBg, color: textColor, fontSize: '.8rem', outline: 'none', boxSizing: 'border-box', textAlign: 'center' }}
-                />
-              </div>
-
-              <div style={{ textAlign: 'left', marginBottom: '.8rem' }}>
-                <label style={{ fontSize: '.65rem', fontWeight: 600, color: textColor, marginBottom: '.25rem', display: 'block' }}>{t("bio")}</label>
-                <textarea value={profileData.bio} onChange={e => setProfileData(p => ({ ...p, bio: e.target.value }))} placeholder={t("bioPlaceholder")} rows={2}
-                  className="login-input"
-                  style={{ width: '100%', padding: '.5rem .8rem', borderRadius: 12, border: `1px solid ${borderColor}`, background: glassBg, color: textColor, fontSize: '.8rem', outline: 'none', resize: 'none', boxSizing: 'border-box', textAlign: 'center' }}
-                />
-              </div>
-
-              <button onClick={handleSaveProfile} disabled={savingProfile}
-                className="login-btn"
-                style={{ width: '100%', padding: '.65rem', borderRadius: 14, border: 'none', background: accentColor, color: '#0a0a14', fontSize: '.8rem', fontWeight: 700, cursor: 'pointer', marginBottom: '.5rem', opacity: savingProfile ? 0.6 : 1 }}
-              >
-                {savingProfile ? 'Saving...' : t("saveProfile")}
-              </button>
-
-              <button onClick={handleSkip}
-                className="login-btn"
-                style={{ width: '100%', padding: '.55rem', borderRadius: 14, border: 'none', background: 'transparent', color: textMuted, fontSize: '.65rem', fontWeight: 500, cursor: 'pointer', marginBottom: '.25rem' }}
-              >
-                {t("skipForNow")} →
-              </button>
-
-              <button onClick={() => setActiveForm('login')}
-                style={{ background: 'transparent', border: 'none', color: textMuted, fontSize: '0.6rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '.2rem' }}
-              >
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> {t("backToHome")}
-              </button>
+              <p style={{ fontSize: '0.6rem', color: textMuted, fontWeight: 300, lineHeight: 1.4, margin: 0 }}>
+                {t("editProfileNote")}
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Terms - with spacing */}
+        {/* Terms */}
         <p style={{ textAlign: 'center', marginTop: '1rem', marginBottom: '2rem', fontSize: '.55rem', color: textMuted, fontWeight: 300, padding: '0 0.5rem' }}>
           {t("termsText")}
         </p>
