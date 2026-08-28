@@ -229,7 +229,7 @@ function Landing() {
     <div style={{ position: 'relative', minHeight: '100vh', background: bg, fontFamily: "'Inter',system-ui,sans-serif", color: tc, transition: 'background 0.3s, color 0.3s' }}>
       
       <style>{`
-        @keyframes spinPause{0%,10%{transform:rotate(0deg)}48%{transform:rotate(720deg)}65%,100%{transform:rotate(720deg)}}
+        @keyframes zoomReveal{0%{transform:scale(.65);opacity:0}12%{transform:scale(1);opacity:1}55%{transform:scale(1.12);opacity:1}82%{transform:scale(8);opacity:.9}100%{transform:scale(28);opacity:0}}
         @keyframes loadingEntrance{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:translateY(0)}}
         @keyframes loadingBag{0%{transform:translate3d(0,115vh,0) rotate(-12deg);opacity:0}10%{opacity:.12}100%{transform:translate3d(18px,-25vh,0) rotate(12deg);opacity:0}}
         @keyframes shimmer{0%{opacity:0.3}50%{opacity:0.7}100%{opacity:0.3}}
@@ -277,8 +277,8 @@ function Landing() {
             <FiShoppingBag className="loading-bag" size={62} style={{ right:'43%',animationDelay:'-4.2s' }}/>
           </div>
           <div style={{ position:'relative',textAlign:'center',zIndex:1 }}>
-            <div style={{ position:'relative',width:124,height:124,margin:'0 auto 14px' }}>
-              <div style={{ position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center' }}><img src={logo} alt="" style={{ width:88,height:88,objectFit:'contain',animation:'spinPause 3.6s ease-in-out infinite' }}/></div>
+            <div style={{ position:'relative',width:140,height:140,margin:'0 auto 4px' }}>
+              <div style={{ position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center' }}><img src={logo} alt="" style={{ width:112,height:112,objectFit:'contain',animation:'zoomReveal 3.6s ease-in-out both' }}/></div>
             </div>
             <h1 className="loading-brand" style={{ fontSize:'1.65rem',fontWeight:800,color:loadingTc,letterSpacing:'0.06em',margin:0 }}>GURANEZA</h1>
             <p className="loading-subtitle" style={{ fontSize:'0.8rem',color:loadingTm,fontWeight:300,margin:'6px 0 18px' }}>BuySmart</p>
