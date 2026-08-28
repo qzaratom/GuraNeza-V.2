@@ -6,7 +6,7 @@ import logo from '../assets/logo.png';
 import bannerImage from '../assets/barner.png';
 import { 
   FiSearch, FiStar, FiShield, FiCheck, FiDollarSign, FiClock, FiEye, FiHeart,
-  FiMapPin, FiArrowRight, FiPackage
+  FiMapPin, FiArrowRight, FiPackage, FiShoppingBag
 } from 'react-icons/fi';
 
 const translations = {
@@ -230,7 +230,11 @@ function Landing() {
         .card-hover{transition:all 0.25s}.card-hover:hover{transform:translateY(-3px);border-color:${ac}!important;box-shadow:0 8px 28px rgba(0,227,9,0.22)!important}
         .search-heading{position:relative;width:max-content;max-width:100%;margin-left:auto!important;margin-right:auto!important;color:${tc};letter-spacing:.01em}.search-heading::after{content:'';display:block;width:76px;height:3px;margin:.35rem auto 0;border-radius:3px;background:linear-gradient(90deg,transparent,${ac},transparent)}
         .search-heading-accent{color:${ac}}
-        .search-field{transition:border-color .2s,box-shadow .2s}.search-field:hover,.search-field:focus-within{border-color:${ac}!important;box-shadow:0 0 0 3px rgba(0,227,9,0.1),0 8px 24px rgba(0,227,9,0.18)!important}
+        .search-field{border-color:${ac}!important;transition:border-color .2s,box-shadow .2s}.search-field:hover,.search-field:focus-within{box-shadow:0 0 0 3px rgba(0,227,9,0.1),0 8px 24px rgba(0,227,9,0.18)!important}
+        .green-hover{transition:transform .2s,background-color .2s,border-color .2s,box-shadow .2s,color .2s}.green-hover:hover{transform:translateY(-2px);border-color:${ac}!important;box-shadow:0 6px 18px rgba(0,227,9,0.2)!important;background-color:${darkMode?'rgba(0,227,9,0.12)':'rgba(0,227,9,0.08)'}!important}
+        .green-hover-solid:hover{background-color:#18f326!important;color:#0a0a14!important}
+        @keyframes floatBag{0%,100%{transform:translate3d(0,0,0) rotate(-8deg)}50%{transform:translate3d(12px,-18px,0) rotate(8deg)}}
+        .floating-bag{position:absolute;color:${ac};opacity:.08;pointer-events:none;animation:floatBag 8s ease-in-out infinite}
         .si::placeholder{color:${darkMode?'rgba(255,255,255,0.4)':'rgba(0,0,0,0.4)'}}
         @media(max-width:640px){.ht{font-size:2.2rem!important}.hd{font-size:.95rem!important}.pg{grid-template-columns:repeat(2,1fr)!important;gap:.5rem!important}.sr{gap:1.5rem!important}.sn{font-size:1.5rem!important}.hide-mobile{display:none!important}.hero-btns-mobile{display:flex!important;flex-direction:column!important;gap:.5rem!important;align-items:center!important}.intro-row{align-items:center!important}.intro-copy{text-align:center!important}.banner-actions{width:100%!important;margin-top:.75rem!important;flex-direction:row!important;align-items:stretch!important;gap:.3rem!important}.banner-actions a{flex:1 1 0!important;min-width:0!important;padding:.5rem .25rem!important;font-size:.62rem!important;white-space:nowrap!important;text-align:center!important}.marketplace-row{justify-content:center!important}.search-heading{font-size:1.15rem!important;text-align:center!important;margin-bottom:.55rem!important}.search-tools>div{padding:.65rem .75rem .8rem!important}.search-tools input{font-size:.8rem!important}.category-actions{justify-content:flex-start!important;gap:.3rem!important;padding-top:.55rem!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important}.category-actions::-webkit-scrollbar{display:none!important}.category-actions button{flex:0 0 auto!important;padding:.3rem .6rem!important;font-size:.62rem!important}}
         @media(min-width:1101px){.pg2{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:1rem!important}}
@@ -240,6 +244,13 @@ function Landing() {
         @media(max-width:760px){.intro-row{flex-direction:column!important;align-items:flex-start!important}.intro-actions{justify-content:flex-start!important}}
         @media(max-width:640px){.banner-content{padding:2.5rem 1.25rem 4rem!important}.banner-actions{width:100%!important}.banner-actions a{flex:1!important;text-align:center!important}}
       `}</style>
+
+      <div aria-hidden="true" style={{ position:'absolute',inset:0,overflow:'hidden',zIndex:0,pointerEvents:'none' }}>
+        <FiShoppingBag className="floating-bag" size={170} style={{ top:'14%',left:'5%' }}/>
+        <FiShoppingBag className="floating-bag" size={110} style={{ top:'42%',right:'8%',animationDelay:'-3s' }}/>
+        <FiShoppingBag className="floating-bag" size={140} style={{ top:'72%',left:'12%',animationDelay:'-5s' }}/>
+        <FiShoppingBag className="floating-bag" size={90} style={{ top:'88%',right:'18%',animationDelay:'-1s' }}/>
+      </div>
 
       {/* Loading Screen */}
       {isLoading && (
@@ -264,14 +275,14 @@ function Landing() {
           </Link>
           <div style={{ display:'flex',alignItems:'center',gap:'.4rem' }}>
             <div ref={langRef} style={{ position:'relative' }}>
-              <button onClick={(e)=>{e.stopPropagation();setLangOpen(!langOpen)}} style={{ display:'flex',alignItems:'center',gap:'.3rem',padding:'.35rem .5rem',border:`1px solid ${darkMode?'rgba(255,255,255,.15)':'rgba(0,0,0,.15)'}`,borderRadius:8,background:'transparent',cursor:'pointer',fontSize:'.65rem',fontWeight:600,color:tc }}>{langLabels[lang]}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg></button>
+              <button className="green-hover" onClick={(e)=>{e.stopPropagation();setLangOpen(!langOpen)}} style={{ display:'flex',alignItems:'center',gap:'.3rem',padding:'.35rem .5rem',border:`1px solid ${darkMode?'rgba(255,255,255,.15)':'rgba(0,0,0,.15)'}`,borderRadius:8,background:'transparent',cursor:'pointer',fontSize:'.65rem',fontWeight:600,color:tc }}>{langLabels[lang]}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg></button>
               {langOpen&&(<div style={{ position:'absolute',top:'calc(100% + .3rem)',right:0,minWidth:90,background:cbg,backdropFilter:'blur(16px)',boxShadow:'0 8px 24px rgba(0,0,0,.3)',borderRadius:12,padding:'.3rem 0',zIndex:20,border:`1px solid ${bc}` }}>{Object.entries(langLabels).map(([code,label])=>(<div key={code} onClick={()=>changeLanguage(code)} style={{ padding:'.4rem 1rem',cursor:'pointer',fontSize:'.65rem',color:lang===code?ac:tc,fontWeight:lang===code?600:400 }}>{label} {lang===code&&'✓'}</div>))}</div>)}
             </div>
-            <button onClick={toggleTheme} style={{ width:36,height:36,borderRadius:'50%',border:`1px solid ${darkMode?'rgba(255,255,255,.15)':'rgba(0,0,0,.12)'}`,background:'transparent',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:tc }}>
+            <button className="green-hover" onClick={toggleTheme} style={{ width:36,height:36,borderRadius:'50%',border:`1px solid ${darkMode?'rgba(255,255,255,.15)':'rgba(0,0,0,.12)'}`,background:'transparent',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:tc }}>
               {darkMode?<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2"/></svg>:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>}
             </button>
-            <Link to="/login" className="hide-mobile" style={{ padding:'.35rem 1rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.15)'}`,borderRadius:20,color:tc,fontSize:'.75rem',fontWeight:500,textDecoration:'none',whiteSpace:'nowrap' }}>{t("signIn")}</Link>
-            <Link to="/login" className="hide-mobile" style={{ padding:'.35rem 1rem',border:'none',borderRadius:20,color:'#0a0a14',fontSize:'.75rem',fontWeight:600,textDecoration:'none',background:ac,whiteSpace:'nowrap' }}>{t("getStarted")}</Link>
+            <Link to="/login" className="hide-mobile green-hover" style={{ padding:'.35rem 1rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.15)'}`,borderRadius:20,color:tc,fontSize:'.75rem',fontWeight:500,textDecoration:'none',whiteSpace:'nowrap' }}>{t("signIn")}</Link>
+            <Link to="/login" className="hide-mobile green-hover green-hover-solid" style={{ padding:'.35rem 1rem',border:'none',borderRadius:20,color:'#0a0a14',fontSize:'.75rem',fontWeight:600,textDecoration:'none',background:ac,whiteSpace:'nowrap' }}>{t("getStarted")}</Link>
           </div>
         </div>
       </header>
@@ -285,9 +296,9 @@ function Landing() {
               <p className="hd" style={{ fontSize:'1rem',color:tm,maxWidth:550,margin:0,fontWeight:300,lineHeight:1.6 }}>{t("heroDesc")}</p>
             </div>
             <div className="intro-actions banner-actions" style={{ display:'flex',gap:'.6rem',justifyContent:'center',flexWrap:'wrap',flexShrink:0 }}>
-              <Link to="/login" style={{ padding:'.6rem 1.8rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.15)'}`,borderRadius:24,color:tc,fontSize:'.85rem',fontWeight:500,textDecoration:'none' }}>{t("browseProducts")}</Link>
-              <Link to="/login" style={{ padding:'.6rem 1.8rem',border:'none',borderRadius:24,color:'#0a0a14',fontSize:'.85rem',fontWeight:600,textDecoration:'none',background:ac }}>{t("startSelling")}</Link>
-              <Link to="/sell" style={{ padding:'.6rem 1.8rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.15)'}`,borderRadius:24,color:tc,fontSize:'.85rem',fontWeight:500,textDecoration:'none' }}>{t("howToSell")}</Link>
+              <Link to="/login" className="green-hover" style={{ padding:'.6rem 1.8rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.15)'}`,borderRadius:24,color:tc,fontSize:'.85rem',fontWeight:500,textDecoration:'none' }}>{t("browseProducts")}</Link>
+              <Link to="/login" className="green-hover green-hover-solid" style={{ padding:'.6rem 1.8rem',border:'none',borderRadius:24,color:'#0a0a14',fontSize:'.85rem',fontWeight:600,textDecoration:'none',background:ac }}>{t("startSelling")}</Link>
+              <Link to="/sell" className="green-hover" style={{ padding:'.6rem 1.8rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.15)'}`,borderRadius:24,color:tc,fontSize:'.85rem',fontWeight:500,textDecoration:'none' }}>{t("howToSell")}</Link>
             </div>
           </div>
         </div>
@@ -301,7 +312,7 @@ function Landing() {
             <FiSearch size={17} style={{ color:ac,flexShrink:0 }}/><input type="text" placeholder="Search products..." value={searchTerm} onChange={e=>setSearchTerm(e.target.value)} className="si" style={{ flex:1,border:'none',background:'transparent',fontSize:'.8rem',padding:'.25rem 0',outline:'none',color:tc }}/>
           </div>
           <div className="category-actions" style={{ display:'flex',gap:'.45rem',padding:'.45rem 0 0',flexWrap:'nowrap',overflowX:'auto',overflowY:'hidden' }}>
-            {allCategories.slice(0,12).map(cat=>(<button key={cat} onClick={()=>setSelectedCategory(cat)} style={{ padding:'.4rem .95rem',borderRadius:20,border:`1px solid ${selectedCategory===cat?'transparent':darkMode?'rgba(255,255,255,0.08)':'rgba(0,0,0,0.08)'}`,background:selectedCategory===cat?ac:cbg,color:selectedCategory===cat?'#0a0a14':tc,fontSize:'.68rem',fontWeight:selectedCategory===cat?700:500,cursor:'pointer',whiteSpace:'nowrap',transition:'all .2s',boxShadow:shadow }}>{cat}</button>))}
+            {allCategories.slice(0,12).map(cat=>(<button className="green-hover" key={cat} onClick={()=>setSelectedCategory(cat)} style={{ padding:'.4rem .95rem',borderRadius:20,border:`1px solid ${selectedCategory===cat?'transparent':darkMode?'rgba(255,255,255,0.08)':'rgba(0,0,0,0.08)'}`,background:selectedCategory===cat?ac:cbg,color:selectedCategory===cat?'#0a0a14':tc,fontSize:'.68rem',fontWeight:selectedCategory===cat?700:500,cursor:'pointer',whiteSpace:'nowrap',transition:'all .2s',boxShadow:shadow }}>{cat}</button>))}
           </div>
         </div>
       </div>
@@ -371,7 +382,7 @@ function Landing() {
             </div>
           )}
           <div style={{ textAlign:'center',marginTop:'1.5rem' }}>
-            <Link to="/login" style={{ display:'inline-flex',alignItems:'center',gap:'.4rem',padding:'.6rem 2rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.12)'}`,borderRadius:22,color:tc,fontSize:'.8rem',fontWeight:500,textDecoration:'none' }}>{t("viewAll")}<FiArrowRight size={14}/></Link>
+            <Link to="/login" className="green-hover" style={{ display:'inline-flex',alignItems:'center',gap:'.4rem',padding:'.6rem 2rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.12)'}`,borderRadius:22,color:tc,fontSize:'.8rem',fontWeight:500,textDecoration:'none' }}>{t("viewAll")}<FiArrowRight size={14}/></Link>
           </div>
           <div className="sr" style={{ display:'flex',gap:'3rem',justifyContent:'center',marginTop:'2rem',paddingTop:'1rem',borderTop:`1px solid ${bc}`,flexWrap:'wrap' }}>
             {[['users',displayedStats.users],['products',displayedStats.products],['shops',displayedStats.shops]].map(([key,value])=><div key={key} style={{ textAlign:'center',minWidth:80 }}><div className="sn" style={{ fontSize:'1.5rem',fontWeight:700,color:ac }}>{value.toLocaleString()}</div><div style={{ fontSize:'.6rem',color:tm,letterSpacing:'.1em',textTransform:'uppercase',marginTop:'.1rem' }}>{t(key)}</div></div>)}
@@ -383,7 +394,7 @@ function Landing() {
       <section style={{ position:'relative',zIndex:10,padding:'2.5rem 1rem',background:darkMode?'rgba(26,26,46,0.4)':'rgba(255,255,255,0.8)',backdropFilter:'blur(16px)',borderTop:`1px solid ${bc}`,textAlign:'center' }}>
         <h2 style={{ fontSize:'1.6rem',fontWeight:700,marginBottom:'.5rem' }}>{t("ctaTitle")} <span style={{ color:ac }}>{t("ctaTitleSpan")}</span></h2>
         <p style={{ color:tm,fontSize:'.85rem',marginBottom:'1.2rem',fontWeight:300 }}>{t("ctaDesc")}</p>
-        <Link to="/login" style={{ padding:'.6rem 2.2rem',border:'none',borderRadius:24,color:'#0a0a14',fontSize:'.9rem',fontWeight:600,textDecoration:'none',background:ac,display:'inline-block' }}>{t("createAccount")}</Link>
+        <Link to="/login" className="green-hover green-hover-solid" style={{ padding:'.6rem 2.2rem',border:'none',borderRadius:24,color:'#0a0a14',fontSize:'.9rem',fontWeight:600,textDecoration:'none',background:ac,display:'inline-block' }}>{t("createAccount")}</Link>
       </section>
     </div>
   );
