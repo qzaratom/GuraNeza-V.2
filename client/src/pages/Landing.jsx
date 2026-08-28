@@ -222,7 +222,8 @@ function Landing() {
     <div style={{ position: 'relative', minHeight: '100vh', background: bg, fontFamily: "'Inter',system-ui,sans-serif", color: tc, transition: 'background 0.3s, color 0.3s' }}>
       
       <style>{`
-        @keyframes spin{to{transform:rotate(360deg)}}
+        @keyframes spinPause{0%,18%{transform:rotate(0deg)}48%,68%{transform:rotate(360deg)}100%{transform:rotate(360deg)}}
+        @keyframes loadingBag{0%{transform:translate3d(0,115vh,0) rotate(-12deg);opacity:0}10%{opacity:.12}100%{transform:translate3d(18px,-25vh,0) rotate(12deg);opacity:0}}
         @keyframes shimmer{0%{opacity:0.3}50%{opacity:0.7}100%{opacity:0.3}}
         .badge-circle{transition:all 0.2s}.badge-circle:hover{transform:scale(1.15)}
         .badge-tooltip{position:absolute;left:22px;top:50%;transform:translateY(-50%);padding:3px 8px;border-radius:5px;font-size:0.5rem;font-weight:700;white-space:nowrap;opacity:0;visibility:hidden;transition:all 0.15s;pointer-events:none;z-index:20}
@@ -235,6 +236,7 @@ function Landing() {
         .green-hover-solid:hover{background-color:#18f326!important;color:#0a0a14!important}
         @keyframes floatBag{0%{transform:translate3d(0,110vh,0) rotate(-12deg);opacity:0}12%{opacity:.08}50%{transform:translate3d(14px,35vh,0) rotate(8deg)}88%{opacity:.08}100%{transform:translate3d(-10px,-25vh,0) rotate(-6deg);opacity:0}}
         .floating-bag{position:absolute;color:${ac};opacity:0;pointer-events:none;animation:floatBag 14s linear infinite}
+        .loading-bag{position:absolute;color:${ac};opacity:0;pointer-events:none;animation:loadingBag 4.5s linear infinite}
         .si::placeholder{color:${darkMode?'rgba(255,255,255,0.4)':'rgba(0,0,0,0.4)'}}
         @media(max-width:640px){.ht{font-size:2.2rem!important}.hd{font-size:.95rem!important}.pg{grid-template-columns:repeat(2,1fr)!important;gap:.5rem!important}.sr{gap:1.5rem!important}.sn{font-size:1.5rem!important}.hide-mobile{display:none!important}.hero-btns-mobile{display:flex!important;flex-direction:column!important;gap:.5rem!important;align-items:center!important}.intro-row{align-items:center!important}.intro-copy{text-align:center!important}.banner-actions{width:100%!important;margin-top:.75rem!important;flex-direction:row!important;align-items:stretch!important;gap:.3rem!important}.banner-actions a{flex:1 1 0!important;min-width:0!important;padding:.5rem .25rem!important;font-size:.62rem!important;white-space:nowrap!important;text-align:center!important}.marketplace-row{justify-content:center!important}.search-heading{font-size:1.15rem!important;text-align:center!important;margin-bottom:.55rem!important}.search-tools>div{padding:.65rem .75rem .8rem!important}.search-tools input{font-size:.8rem!important}.category-actions{justify-content:flex-start!important;gap:.3rem!important;padding-top:.55rem!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important}.category-actions::-webkit-scrollbar{display:none!important}.category-actions button{flex:0 0 auto!important;padding:.3rem .6rem!important;font-size:.62rem!important}}
         @media(min-width:1101px){.pg2{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:1rem!important}}
@@ -255,10 +257,15 @@ function Landing() {
       {/* Loading Screen */}
       {isLoading && (
         <div style={{ position:'fixed',inset:0,zIndex:9999,display:'flex',alignItems:'center',justifyContent:'center',background:loadingBg }}>
+          <div aria-hidden="true" style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none' }}>
+            <FiShoppingBag className="loading-bag" size={92} style={{ left:'8%',animationDelay:'0s' }}/>
+            <FiShoppingBag className="loading-bag" size={64} style={{ left:'34%',animationDelay:'-1.6s' }}/>
+            <FiShoppingBag className="loading-bag" size={110} style={{ right:'12%',animationDelay:'-3.1s' }}/>
+            <FiShoppingBag className="loading-bag" size={54} style={{ right:'38%',animationDelay:'-2.3s' }}/>
+          </div>
           <div style={{ position:'relative',textAlign:'center',zIndex:1 }}>
             <div style={{ position:'relative',width:100,height:100,margin:'0 auto 20px' }}>
-              <svg viewBox="0 0 100 100" style={{ position:'absolute',inset:0,animation:'spin 2.5s linear infinite' }}><circle cx="50" cy="50" r="46" fill="none" stroke="#00E309" strokeWidth="1.5" strokeDasharray="180 100" strokeLinecap="round" opacity="0.6"/></svg>
-              <div style={{ position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center' }}><img src={logo} alt="" style={{ width:44,height:44,objectFit:'contain' }}/></div>
+              <div style={{ position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center' }}><img src={logo} alt="" style={{ width:58,height:58,objectFit:'contain',animation:'spinPause 3.2s ease-in-out infinite' }}/></div>
             </div>
             <h1 style={{ fontSize:'1.5rem',fontWeight:800,color:loadingTc,letterSpacing:'0.06em' }}>GURANEZA</h1>
             <p style={{ fontSize:'0.8rem',color:loadingTm,fontWeight:300,marginTop:4 }}>BuySmart</p>
