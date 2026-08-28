@@ -200,7 +200,7 @@ function Login({ setUser }) {
         @keyframes bagRise{0%{transform:translateY(0) rotate(0deg);opacity:0}5%{opacity:.05}95%{opacity:.05}100%{transform:translateY(-110vh) rotate(360deg);opacity:0}}
         @media (max-width: 480px) {
           .login-card { max-width: 100% !important; }
-          .login-banner { height: 120px !important; }
+          .login-banner { height: 100px !important; }
           .login-title { font-size: 1.1rem !important; }
           .login-subtitle { font-size: 0.7rem !important; }
           .login-btn { padding: 0.65rem !important; font-size: 0.78rem !important; }
@@ -218,7 +218,7 @@ function Login({ setUser }) {
       </div>
 
       {/* Main container */}
-      <div className="login-card" style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 420 }}>
+      <div className="login-card" style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 380, margin: '1.5rem auto' }}>
         
         {/* Back to Home */}
         <div style={{ textAlign: 'center', marginBottom: '0.8rem' }}>
@@ -238,7 +238,7 @@ function Login({ setUser }) {
         }}>
           
           {/* GIF Banner with blur transition */}
-          <div className="login-banner" style={{ position: 'relative', height: 150, overflow: 'hidden' }}>
+          <div className="login-banner" style={{ position: 'relative', height: 120, overflow: 'hidden' }}>
             <img src={videoGif} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             <div style={{ 
               position: 'absolute', bottom: 0, left: 0, right: 0, height: '100%',
@@ -265,13 +265,13 @@ function Login({ setUser }) {
           </div>
 
           {/* LOGIN FORM */}
-          <div className="login-padding" style={{ padding: '1.5rem 1.8rem 1.2rem', textAlign: 'center' }}>
-            <div style={{ marginBottom: '.6rem' }}>
-              <img src={logo} alt="GuraNeza" style={{ width: 40, height: 40, objectFit: 'contain', margin: '0 auto', display: 'block' }} />
+          <div className="login-padding" style={{ padding: '1.15rem 1.45rem 1rem', textAlign: 'center' }}>
+            <div style={{ marginBottom: '.35rem' }}>
+              <img src={logo} alt="GuraNeza" style={{ width: 32, height: 32, objectFit: 'contain', margin: '0 auto', display: 'block' }} />
             </div>
 
-            <h1 className="login-title" style={{ fontSize: '1.3rem', fontWeight: 700, color: textColor, marginBottom: '.2rem' }}>{t("welcomeBack")}</h1>
-            <p className="login-subtitle" style={{ fontSize: '.75rem', color: textMuted, fontWeight: 300, marginBottom: '1.2rem' }}>{t("signInToContinue")}</p>
+            <h1 className="login-title" style={{ fontSize: '1.15rem', fontWeight: 700, color: textColor, marginBottom: '.15rem' }}>{t("welcomeBack")}</h1>
+            <p className="login-subtitle" style={{ fontSize: '.68rem', color: textMuted, fontWeight: 300, marginBottom: '.85rem' }}>{t("signInToContinue")}</p>
 
             {error && (
               <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10, padding: '.5rem .8rem', marginBottom: '.8rem', fontSize: '.65rem', color: '#ef4444' }}>{error}</div>
@@ -280,7 +280,7 @@ function Login({ setUser }) {
             {/* Sign In Button */}
             <button onClick={() => handleGoogleLogin('signin')} disabled={loading}
               className="login-btn"
-              style={{ width: '100%', padding: '.75rem', borderRadius: 16, border: 'none', background: accentColor, color: '#0a0a14', fontSize: '.85rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.5rem', marginBottom: '.7rem', opacity: loading ? 0.6 : 1 }}
+              style={{ width: '100%', padding: '.62rem', borderRadius: 14, border: 'none', background: accentColor, color: '#0a0a14', fontSize: '.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.5rem', marginBottom: '.55rem', opacity: loading ? 0.6 : 1 }}
             >
               <svg width="16" height="16" viewBox="0 0 24 24">
                 <path fill="#0a0a14" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#0a0a14" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#0a0a14" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#0a0a14" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
@@ -297,7 +297,7 @@ function Login({ setUser }) {
             {/* Create Account Button */}
             <button onClick={() => handleGoogleLogin('signup')} disabled={loading}
               className="login-btn"
-              style={{ width: '100%', padding: '.75rem', borderRadius: 16, border: `1px solid ${btnOutlineBorder}`, background: glassBg, backdropFilter: 'blur(12px)', color: textColor, fontSize: '.85rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.5rem', marginBottom: '.7rem', opacity: loading ? 0.6 : 1 }}
+              style={{ width: '100%', padding: '.62rem', borderRadius: 14, border: `1px solid ${btnOutlineBorder}`, background: glassBg, backdropFilter: 'blur(12px)', color: textColor, fontSize: '.78rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.5rem', marginBottom: '.55rem', opacity: loading ? 0.6 : 1 }}
               onMouseEnter={e => { if (!loading) e.currentTarget.style.borderColor = accentColor; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = btnOutlineBorder; }}
             >
@@ -311,7 +311,7 @@ function Login({ setUser }) {
             <div style={{ 
               background: darkMode ? 'rgba(0,227,9,0.04)' : 'rgba(0,227,9,0.03)', 
               border: `1px solid ${darkMode ? 'rgba(0,227,9,0.1)' : 'rgba(0,227,9,0.08)'}`, 
-              borderRadius: 14, padding: '0.8rem 1rem', marginTop: '0.8rem' 
+              borderRadius: 12, padding: '0.65rem 0.85rem', marginTop: '0.6rem' 
             }}>
               <div style={{ fontSize: '0.7rem', fontWeight: 600, color: accentColor, marginBottom: '0.2rem' }}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ verticalAlign: 'middle', marginRight: '0.3rem' }}>

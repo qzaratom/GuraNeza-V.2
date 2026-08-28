@@ -3,70 +3,57 @@ import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import logo from '../assets/logo.png';
 
+const terms = [
+  ['1. About GuraNeza', 'GuraNeza is a digital marketplace that allows users to buy and discover products, list and sell products, connect with buyers and sellers, manage products and listings, access seller subscription services, and report suspicious, fraudulent, misleading, or prohibited activity. GuraNeza is primarily a marketplace and does not automatically become the seller or owner of products listed by users. Unless explicitly stated otherwise, transactions are between the buyer and seller.'],
+  ['2. User Accounts', "Users must provide accurate and truthful information, keep credentials secure, not create accounts using another person's identity, not share accounts where prohibited, update inaccurate information, and use the platform lawfully. Users are responsible for activity through their account. GuraNeza may suspend or deactivate accounts where there is reasonable evidence of fraud, abuse, impersonation, misleading activity, or violation of these Terms."],
+  ['3. Seller Responsibilities', 'Sellers must provide the correct product name, accurate description, condition, price, specifications, location where applicable, genuine photographs, and important defects, damage, or limitations. Sellers must not deliberately hide information that could influence a buyer’s decision.'],
+  ['4. Product Images and Authenticity', 'Product images must represent the actual product offered for sale. Sellers must not use Google images of another product, copied images, AI-generated images, unrelated stock photographs, significantly misleading edits, or images of a different product or condition. Photographs should show the actual condition at listing time, including scratches, cracks, dents, missing accessories, and defects. GuraNeza may remove misleading or unauthentic listings.'],
+  ['5. Accurate Product Information', 'Sellers must not advertise fake products as genuine, state incorrect specifications, misrepresent condition, claim used products are new, hide significant defects, advertise one product while delivering another, advertise unavailable products, or manipulate prices and descriptions. GuraNeza may investigate material differences between a listing and the product.'],
+  ['6. Prohibited Products and Activities', 'Users may not advertise, sell, distribute, or facilitate unlawful or prohibited products or activities. GuraNeza may remove illegal products, counterfeit or fraudulent goods, stolen property, fraudulent documents, misleading listings, unlawful products, products creating unreasonable risks, and any other category GuraNeza determines should not be permitted. Categories may be updated as the platform develops.'],
+  ['7. Verification System and Verification Badges', 'GuraNeza may provide verification badges to eligible sellers, products, or listings after a verification process. A badge does not guarantee that a product has no defects or that a transaction is risk-free. Verification provides additional confidence and accountability. GuraNeza may remove a badge when requirements are no longer met.'],
+  ['8. Subscription Plans and Product Verification', 'GuraNeza currently provides Free, Starter, Business, Premium, and Enterprise plans. Benefits and requirements may vary. Business, Premium, and Enterprise products may be subject to verification of product existence, condition, information, seller information, supporting evidence, and other relevant details. These plans receive a higher level of platform verification and support than Free and Starter listings.'],
+  ['9. Buyer Protection for Verified Subscription Listings', 'For products verified under Business, Premium, or Enterprise subscriptions, buyers may report suspected fraud, serious misrepresentation, or significant discrepancies. GuraNeza may review complaints, contact the seller, request evidence, review the listing, conduct additional verification, suspend a listing or seller, facilitate communication, and where appropriate and subject to the circumstances provide or facilitate a refund. Verification does not mean every complaint automatically results in a refund. Decisions depend on evidence, complaint nature, seller response, product condition, transaction evidence, applicable law, and investigation.'],
+  ['10. Free and Starter Listings', 'Free and Starter listings do not receive the same verification or transaction protection as Business, Premium, and Enterprise listings. GuraNeza may receive complaints, investigate accounts, remove misleading listings, restrict or suspend accounts, ban users involved in fraud, and provide reasonable assistance. GuraNeza does not guarantee refunds or recovery of money for non-verified transactions. This distinction should be clear before purchase.'],
+  ['11. Fraud and Misrepresentation', 'Fraud includes selling counterfeit products as genuine, taking payment without intending to provide the product, delivering a substantially different product, false specifications, fake photographs or accounts, impersonation, verification manipulation, scams, and repeated misleading conduct. GuraNeza may remove listings or badges, suspend or deactivate accounts, prevent new accounts, preserve records, and cooperate with authorities where required by law.'],
+  ['12. Reporting Fraud or Suspicious Activity', 'Users should report fraudulent sellers, fake products, misleading listings, suspicious accounts, stolen products, fake images, incorrect information, abusive behavior, and other violations through Help/Report. Include listings, screenshots, messages, transaction information, photographs, and relevant communication. GuraNeza aims to review reports within 24 hours, though complex cases take longer. A report does not establish guilt; evidence is reviewed before action.'],
+  ['13. False Reports', 'Users must not intentionally submit false or malicious reports, damage another user’s reputation, or abuse reporting. Repeated false reports may lead to restrictions or suspension.'],
+  ['14. Buyer Responsibilities', 'Buyers should review descriptions, examine photographs, ask questions, confirm condition and specifications, be cautious with unverified listings, keep transaction evidence, and report suspicious activity promptly. GuraNeza encourages inspection where possible before completing a transaction.'],
+  ['15. Seller-Buyer Transactions', 'Unless GuraNeza explicitly provides a transaction or payment service, it is not automatically a party to the sale. Buyers and sellers agree on price, payment method, delivery or collection, inspection, timing, and other conditions. Users should be cautious with payments and sensitive information.'],
+  ['16. User Reviews and Feedback', 'Reviews must be honest, relevant, based on genuine experience, and free from threats or harassment. Fake reviews, rating manipulation, or paid misleading reviews are prohibited. GuraNeza may remove violating reviews.'],
+  ['17. Privacy and Personal Data', 'GuraNeza may collect and process information needed for accounts, listings, communications, applicable transactions, security, support, verification, and fraud prevention. Data must be processed lawfully, fairly, transparently, for legitimate purposes, kept accurate where necessary, and retained only as long as necessary under Rwanda’s data-protection framework. See the Data Protection Office obligations page. Users should have a separate Privacy Policy explaining collection, use, recipients, retention, security, and rights.'],
+  ['18. Security of User Information', 'GuraNeza will take reasonable technical and organizational measures against unauthorized access, loss, misuse, alteration, or disclosure. No online system guarantees absolute security. Users must protect passwords, authentication information, and devices.'],
+  ['19. Platform Content and Intellectual Property', 'Users remain responsible for uploaded content. Uploading photographs, descriptions, videos, or other content grants GuraNeza permission to use it as reasonably necessary to operate, promote, display, and improve the platform. Content must not belong to another person without permission, infringe intellectual-property rights, be fraudulent or misleading, or violate law or these Terms.'],
+  ['20. Platform Availability', 'Temporary interruptions may result from maintenance, technical failures, internet connectivity, security incidents, third-party services, or events outside reasonable control. GuraNeza does not guarantee uninterrupted access to every feature.'],
+  ['21. Account Suspension and Termination', 'GuraNeza may suspend or terminate accounts for fraud, repeated misleading listings, counterfeit products, abuse, false information, prohibited activities, verification manipulation, repeated violations, or attempts to bypass restrictions. Where appropriate, GuraNeza may explain the decision or allow an appeal.'],
+  ['22. Appeals', 'Users whose account or listing is suspended or removed may contact Help/Support to request review and provide evidence. GuraNeza may reconsider decisions when new evidence becomes available.'],
+  ['23. Changes to the Platform', 'GuraNeza may modify, add, or remove platform features, subscription benefits, verification requirements, or policies. Where changes materially affect users, reasonable notice should be provided where appropriate.'],
+  ['24. Changes to These Terms', 'GuraNeza may update these Terms. The latest version will be available on the platform. Continued use after an update becomes effective may constitute acceptance, subject to applicable law.'],
+  ['25. Applicable Law', 'These Terms are interpreted under the applicable laws of the Republic of Rwanda. Nothing removes rights under mandatory consumer- or data-protection laws. Rwanda’s framework provides rights concerning access to personal data and mechanisms for complaints and disputes. See the Data Protection Office rights page.'],
+  ['26. Platform Ownership and Product Responsibility', 'GuraNeza does not own, manufacture, sell, or directly supply user-listed products unless specifically identified as offered directly by GuraNeza. Listings do not guarantee quality, condition, authenticity, legality, availability, or suitability. Buyers should ask questions, review information and images, communicate with sellers, confirm condition and specifications, and request information where needed. Sellers must provide honest information and ensure the product corresponds with its listing. Verification protections apply according to GuraNeza policies and do not remove buyer responsibility.'],
+  ['27. Transactions and Payment Methods', 'GuraNeza currently does not process or complete transactions directly. It helps buyers and sellers discover products, communicate, and arrange transactions; online checkout and automated settlement are not currently available. Subscription or service payment instructions, including MoMo details, will come through official GuraNeza channels. Pay only an official administrator through the designated chat or support area, never unofficial accounts or details outside authorized channels. Service requests aim for review within 24 hours, though checks may take longer. Integrated payments are planned for the future, with procedures, refunds, fees, and requirements communicated before introduction.'],
+  ['29. Contact and Customer Support', 'Contact GuraNeza through Help and Support for fraud, misleading listings, inappropriate content, account issues, violations, verification, privacy concerns, or other problems. Initial review is targeted within 24 hours where reasonably possible, though complex investigations take longer. Provide accurate product and seller details, screenshots, transaction information, and evidence. GuraNeza may contact parties, request information, restrict listings, warn users, suspend accounts, or apply verification restrictions. Reports and personal information are handled according to the Privacy Policy and applicable laws. Website: guraneza.com | Support: guranezarw@gmail.com | Phone: +250795583674']
+];
+
 function Terms() {
   const { darkMode } = useTheme();
-  const accentColor = '#00E309';
-  const bgColor = darkMode ? '#0a0a14' : '#f8fafc';
-  const cardBg = darkMode ? 'rgba(26,26,46,0.75)' : 'rgba(255,255,255,0.95)';
-  const textColor = darkMode ? 'white' : '#1a1a2e';
-  const textMuted = darkMode ? 'rgba(255,255,255,0.62)' : 'rgba(0,0,0,0.58)';
-  const borderColor = darkMode ? 'rgba(0,227,9,0.12)' : 'rgba(0,0,0,0.08)';
-
-  return (
-    <main style={{ minHeight: '100vh', background: bgColor, color: textColor, padding: '2rem 1rem 4rem', fontFamily: "'Inter',system-ui,sans-serif" }}>
-      <div style={{ maxWidth: 820, margin: '0 auto' }}>
-        <Link to="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', color: textMuted, textDecoration: 'none', fontSize: '.75rem', marginBottom: '2rem' }}>
-          <span aria-hidden="true">&#8592;</span> Back to sign in
-        </Link>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem', marginBottom: '1.5rem' }}>
-          <img src={logo} alt="GuraNeza" style={{ width: 42, height: 42, objectFit: 'contain' }} />
-          <div>
-            <h1 style={{ margin: 0, fontSize: '1.8rem', lineHeight: 1.1 }}>Terms &amp; Privacy</h1>
-            <p style={{ margin: '.35rem 0 0', color: accentColor, fontSize: '.7rem', fontWeight: 600 }}>GuraNeza BuySmart</p>
-          </div>
-        </div>
-
-        <div style={{ background: cardBg, border: `1px solid ${borderColor}`, borderRadius: 18, padding: 'clamp(1.2rem, 4vw, 2.2rem)', boxShadow: darkMode ? '0 20px 50px rgba(0,0,0,.25)' : '0 12px 35px rgba(0,0,0,.06)' }}>
-          <p style={{ color: textMuted, fontSize: '.78rem', lineHeight: 1.7, marginTop: 0 }}>
-            These short terms explain the main rules for using GuraNeza. By creating an account or continuing to use the service, you agree to follow them.
-          </p>
-
-          <section>
-            <h2>1. Using GuraNeza</h2>
-            <p>GuraNeza connects buyers and sellers in Rwanda. You must provide accurate information, keep your account secure, and use the service lawfully. You are responsible for activity made through your account.</p>
-          </section>
-          <section>
-            <h2>2. Listings and transactions</h2>
-            <p>Sellers must publish honest descriptions, accurate prices, and lawful products. Buyers and sellers are responsible for discussing payment, delivery, returns, and other transaction details. GuraNeza does not become the owner of listed goods or a party to private transactions.</p>
-          </section>
-          <section>
-            <h2>3. Safety and prohibited use</h2>
-            <p>Do not post illegal, stolen, unsafe, misleading, abusive, or infringing content. Do not scam, impersonate others, manipulate listings, collect personal information improperly, or interfere with the platform. We may remove content or restrict accounts that break these rules.</p>
-          </section>
-          <section>
-            <h2>4. Content and intellectual property</h2>
-            <p>You keep ownership of content you submit, but allow GuraNeza to display it for operating and promoting the marketplace. The GuraNeza name, interface, and service materials may not be copied or used without permission.</p>
-          </section>
-          <section id="privacy">
-            <h2>5. Privacy</h2>
-            <p>We collect information needed to provide accounts, listings, communication, security, and support. We use it to operate and improve GuraNeza, prevent abuse, and meet legal obligations. We do not sell personal information. You can contact us about your account information or privacy concerns.</p>
-          </section>
-          <section>
-            <h2>6. Changes and availability</h2>
-            <p>We may update these terms as GuraNeza grows. We may also modify or pause features for maintenance, safety, or legal reasons. Continued use after an update means you accept the revised terms.</p>
-          </section>
-          <section>
-            <h2>7. Contact</h2>
-            <p style={{ marginBottom: 0 }}>For questions about these terms or privacy, contact us at <a href="mailto:guraneza@gmail.com" style={{ color: accentColor }}>guraneza@gmail.com</a>.</p>
-          </section>
-        </div>
-
-        <p style={{ textAlign: 'center', color: textMuted, fontSize: '.65rem', margin: '1.2rem 0 0' }}>Last updated: August 2026</p>
-      </div>
-      <style>{`section + section{margin-top:1.35rem}h2{font-size:1rem;margin:0 0 .45rem;color:${textColor}}section p{font-size:.78rem;line-height:1.7;color:${textMuted};margin:0}`}</style>
-    </main>
-  );
+  const accent = '#00E309';
+  const text = darkMode ? 'white' : '#1a1a2e';
+  const muted = darkMode ? 'rgba(255,255,255,.64)' : 'rgba(0,0,0,.6)';
+  const bg = darkMode ? '#0a0a14' : '#f8fafc';
+  const panel = darkMode ? 'rgba(26,26,46,.75)' : 'rgba(255,255,255,.96)';
+  const border = darkMode ? 'rgba(0,227,9,.12)' : 'rgba(0,0,0,.08)';
+  return <main style={{ minHeight:'100vh', background:bg, color:text, padding:'1.5rem 1rem 3rem', fontFamily:"'Inter',system-ui,sans-serif" }}>
+    <div style={{ maxWidth:900, margin:'0 auto' }}>
+      <Link to="/login" style={{ color:muted, textDecoration:'none', fontSize:'.75rem' }}>&#8592; Back to sign in</Link>
+      <header style={{ display:'flex', alignItems:'center', gap:'.6rem', margin:'1.4rem 0 1.2rem' }}><img src={logo} alt="GuraNeza" style={{ width:42,height:42,objectFit:'contain' }}/><div><h1 style={{ margin:0,fontSize:'1.8rem' }}>Terms and Conditions</h1><p style={{ margin:'.3rem 0 0',color:accent,fontSize:'.7rem',fontWeight:600 }}>GuraNeza | BuySmart</p></div></header>
+      <article style={{ background:panel,border:`1px solid ${border}`,borderRadius:18,padding:'clamp(1.2rem,4vw,2.2rem)',boxShadow:darkMode?'0 20px 50px rgba(0,0,0,.25)':'0 12px 35px rgba(0,0,0,.06)' }}>
+        <p className="terms-copy"><strong>Last Updated: 8/28/2026.</strong></p>
+        <p className="terms-copy">Welcome to GuraNeza | BuySmart, an online marketplace designed to connect buyers and sellers in Rwanda. By creating an account, accessing, or using GuraNeza, you agree to comply with these Terms and Conditions. If you do not agree, you should not use the platform.</p>
+        {terms.map(([title, content]) => <section key={title} id={title.startsWith('17.') ? 'privacy' : undefined}><h2>{title}</h2><p className="terms-copy">{content}</p></section>)}
+      </article>
+    </div>
+    <style>{`section+section{margin-top:1.3rem}h2{font-size:1rem;margin:0 0 .35rem;color:${text}}.terms-copy{font-size:.78rem;line-height:1.72;color:${muted};margin:.45rem 0}.terms-copy strong{color:${text}}a{color:${accent}}`}</style>
+  </main>;
 }
 
 export default Terms;

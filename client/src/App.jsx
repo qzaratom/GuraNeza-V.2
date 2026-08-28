@@ -42,6 +42,19 @@ function AuthenticatedRedirect({ user }) {
   return null;
 }
 
+function AppShell({ children, user, setUser, darkMode }) {
+  const { pathname } = useLocation();
+  const barePage = pathname === '/login' || pathname === '/terms';
+
+  return (
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: darkMode ? '#0a0a14' : '#f8fafc', transition: 'background 0.3s' }}>
+      {!barePage && <Navbar user={user} setUser={setUser} />}
+      <main style={{ flex: 1 }}>{children}</main>
+      {!barePage && <Footer />}
+    </div>
+  );
+}
+
 function App() {
   const { darkMode } = useTheme();
   const [user, setUser] = useState(null);
@@ -75,9 +88,7 @@ function App() {
     <Router>
       <ScrollToTop />
       <AuthenticatedRedirect user={user} />
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: darkMode ? '#0a0a14' : '#f8fafc', transition: 'background 0.3s' }}>
-        <Navbar user={user} setUser={setUser} />
-        <main style={{ flex: 1 }}>
+      <AppShell user={user} setUser={setUser} darkMode={darkMode}>
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Landing />} />
@@ -101,9 +112,7 @@ function App() {
             {/* Admin Routes */}
             <Route path="/admin/*" element={<Admin user={user} />} />
           </Routes>
-        </main>
-        <Footer />
-      </div>
+      </AppShell>
     </Router>
   );
 }
