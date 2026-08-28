@@ -291,8 +291,8 @@ function Landing() {
         <div aria-hidden="true" style={{ position:'absolute',zIndex:1,left:0,right:0,bottom:0,height:110,background:`linear-gradient(to bottom, transparent, ${bg})`,pointerEvents:'none' }}/>
       </section>
 
-      <div className="search-tools" style={{ position:'sticky',top:49,zIndex:90,background:darkMode?'rgba(10,10,20,.48)':'rgba(248,250,252,.5)',backdropFilter:'blur(16px)',WebkitBackdropFilter:'blur(16px)',borderBottom:`1px solid ${darkMode?'rgba(255,255,255,.12)':'rgba(255,255,255,.65)'}`,boxShadow:'0 8px 24px rgba(0,0,0,.08)' }}>
-        <div style={{ maxWidth:1280,margin:'0 auto',padding:'.8rem 1rem 1rem',background:'transparent' }}>
+      <div className="search-tools" style={{ position:'sticky',top:49,zIndex:90,width:'calc(100% - 2rem)',maxWidth:980,margin:'-2.5rem auto 0',background:cbg,backdropFilter:'blur(20px)',WebkitBackdropFilter:'blur(20px)',border:`1px solid ${bc}`,borderRadius:20,boxShadow:darkMode?'0 14px 34px rgba(0,0,0,.35)':'0 14px 34px rgba(0,0,0,.12)' }}>
+        <div style={{ margin:'0 auto',padding:'1rem 1.25rem 1.15rem',background:'transparent' }}>
           <h2 className="search-heading" style={{ fontSize:'1.25rem',fontWeight:700,margin:'0 0 .8rem' }}>Hey there! What are you searching for?</h2>
           <div style={{ display:'flex',width:'100%',gap:'.3rem',alignItems:'center',background:cbg,borderRadius:16,border:`1px solid ${bc}`,padding:'.7rem 1rem',boxShadow:shadow }}>
             <FiSearch size={18} style={{ color:ac }}/><input type="text" placeholder={t("searchPlaceholder")} value={searchTerm} onChange={e=>setSearchTerm(e.target.value)} className="si" style={{ flex:1,border:'none',background:'transparent',fontSize:'.9rem',padding:'.35rem 0',outline:'none',color:tc }}/>
