@@ -293,6 +293,7 @@ function Landing() {
 
       <div className="search-tools" style={{ position:'sticky',top:49,zIndex:90,width:'100%',maxWidth:1280,margin:'0 auto',padding:'.35rem 1rem .75rem',background:`linear-gradient(to bottom, ${bg}, ${bg}cc, transparent)`,border:'none',boxShadow:'none' }}>
         <div style={{ margin:'0 auto',background:'transparent' }}>
+          <h2 className="search-heading" style={{ textAlign:'center',fontSize:'1.1rem',fontWeight:700,margin:'0 0 .55rem',color:tc }}>Hey!, What are you searching for?</h2>
           <div style={{ display:'flex',width:'100%',gap:'.45rem',alignItems:'center',background:cbg,backdropFilter:'blur(16px)',WebkitBackdropFilter:'blur(16px)',borderRadius:16,border:`1px solid ${bc}`,padding:'.65rem 1rem',boxShadow:shadow }}>
             <FiSearch size={17} style={{ color:ac,flexShrink:0 }}/><input type="text" placeholder="Search products..." value={searchTerm} onChange={e=>setSearchTerm(e.target.value)} className="si" style={{ flex:1,border:'none',background:'transparent',fontSize:'.8rem',padding:'.25rem 0',outline:'none',color:tc }}/>
           </div>
