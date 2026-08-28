@@ -178,6 +178,13 @@ function Home() {
         @keyframes shimmer { 0% { opacity: 0.3; } 50% { opacity: 0.7; } 100% { opacity: 0.3; } }
         .card-hover { transition: all 0.2s; }
         .card-hover:hover { transform: translateY(-3px); box-shadow: ${darkMode ? '0 8px 28px rgba(0,0,0,0.35)' : '0 8px 28px rgba(0,0,0,0.08)'}; }
+        .search-field { transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s; }
+        .search-field:hover, .search-field:focus-within { border-color: ${ac}; box-shadow: 0 6px 20px ${darkMode ? 'rgba(0,227,9,0.12)' : 'rgba(0,120,0,0.12)'}; transform: translateY(-1px); }
+        .category-pill { transition: transform 0.2s, border-color 0.2s, background 0.2s; }
+        .category-pill:hover { transform: translateY(-2px) scale(1.03); border-color: ${ac} !important; background: ${abg} !important; color: ${ac} !important; }
+        .product-image { overflow: hidden; }
+        .product-image img { transition: transform 0.35s ease; }
+        .card-hover:hover .product-image img { transform: scale(1.08); }
         .badge-circle { transition: all 0.2s; }
         .badge-circle:hover { transform: scale(1.15); }
         .badge-tooltip { position: absolute; left: 22px; top: 50%; transform: translateY(-50%); padding: 3px 8px; border-radius: 5px; font-size: 0.5rem; font-weight: 700; white-space: nowrap; opacity: 0; visibility: hidden; transition: all 0.15s; pointer-events: none; z-index: 20; }
@@ -233,7 +240,7 @@ function Home() {
         <div style={{ position: 'sticky', top: navbarHeight, zIndex: 80, padding: '8px 12px', background: `linear-gradient(to bottom, ${bg}, ${bg}90, transparent)` }}>
           <div style={{ maxWidth: 1280, margin: '0 auto' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', borderRadius: 14, border: `1px solid ${bc}`, background: glassBg, backdropFilter: 'blur(16px)' }}>
+              <div className="search-field" style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', borderRadius: 14, border: `1px solid ${bc}`, background: glassBg, backdropFilter: 'blur(16px)' }}>
                 <FiSearch size={16} style={{ color: ac }} />
                 <input type="text" placeholder="Search products..." value={search} onChange={(e) => setSearch(e.target.value)} style={{ width: '100%', border: 'none', background: 'transparent', fontSize: '0.8rem', padding: '4px 0', outline: 'none', color: tc }} />
               </div>
@@ -327,7 +334,7 @@ function Home() {
               </div>
             </div>
             <div className="cat-scroll" style={{ display: 'flex', gap: '6px', padding: '10px 0 5px', overflowX: 'auto', whiteSpace: 'nowrap' }}>
-              {allCategories.slice(0, 12).map(cat => (<button key={cat} onClick={() => setSelectedCategory(cat)} style={{ padding: '7px 15px', borderRadius: 20, fontSize: '0.7rem', fontWeight: selectedCategory === cat ? 600 : 400, border: selectedCategory === cat ? `1.5px solid ${ac}` : `1px solid ${bc}`, background: selectedCategory === cat ? abg : cbg, backdropFilter: 'blur(16px)', color: selectedCategory === cat ? ac : tc, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0, transition: 'all 0.15s' }}>{cat === "All" ? "All" : cat}</button>))}
+              {allCategories.slice(0, 12).map(cat => (<button key={cat} className="category-pill" onClick={() => setSelectedCategory(cat)} style={{ padding: '7px 15px', borderRadius: 20, fontSize: '0.7rem', fontWeight: selectedCategory === cat ? 600 : 400, border: selectedCategory === cat ? `1.5px solid ${ac}` : `1px solid ${bc}`, background: selectedCategory === cat ? abg : cbg, backdropFilter: 'blur(16px)', color: selectedCategory === cat ? ac : tc, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0, transition: 'all 0.15s' }}>{cat === "All" ? "All" : cat}</button>))}
             </div>
           </div>
         </div>
@@ -336,7 +343,7 @@ function Home() {
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 12px 40px', width: '100%' }}>
           {loading && products.length === 0 ? (
             <div className="product-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(6, minmax(0, 1fr))', gap: '16px' }}>
-              {[...Array(8)].map((_, i) => <SkeletonCard key={i} darkMode={darkMode} />)}
+              {[...Array(18)].map((_, i) => <SkeletonCard key={i} darkMode={darkMode} />)}
             </div>
           ) : products.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '60px 20px', color: tm, background: cbg, backdropFilter: 'blur(16px)', borderRadius: 20, border: `1px solid ${bc}`, boxShadow: shadow }}>
@@ -353,7 +360,7 @@ function Home() {
                     <div key={product.id} onClick={() => navigate(`/products/${product.id}`)} className="card-hover"
                       style={{ background: cbg, backdropFilter: 'blur(16px)', borderRadius: 16, border: `1px solid ${bc}`, overflow: 'hidden', cursor: 'pointer', display: 'flex', flexDirection: 'column' }}>
                       
-                      <div style={{ position: 'relative', aspectRatio: '1/1', background: darkMode ? '#0d0d1a' : '#f1f5f9', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div className="product-image" style={{ position: 'relative', aspectRatio: '1/1', background: darkMode ? '#0d0d1a' : '#f1f5f9', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         {product.images?.[0] ? <LazyImage src={product.images[0]} alt={product.name} /> : <FiPackage size={48} style={{ color: tm, opacity: 0.15 }} />}
                         
                         {sellerBadges.length > 0 && (
