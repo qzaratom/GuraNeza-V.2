@@ -171,23 +171,21 @@ function Login({ setUser }) {
       <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', background: loadingBg }}>
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
           {floatingBags.map((bag, i) => (
-            <div key={i} style={{ position: 'absolute', left: bag.left, bottom: '-30px', animation: `bagRise ${bag.duration} linear infinite`, animationDelay: bag.delay, opacity: bag.opacity }}>
-              <svg width={bag.size} height={bag.size} viewBox="0 0 24 24" fill={darkMode ? "white" : "#0a0a14"}><path d="M16 6l-2-3h-4L8 6H3v15h18V6h-5zM8.5 7l2-3h3l2 3H8.5zM5 19V8h2v11H5zm4 0V8h2v11H9zm4 0V8h2v11h-2zm4 0V8h2v11h-2z"/></svg>
+            <div key={i} className="auth-loading-bag" style={{ left: bag.left, '--drift': `${(i % 2 ? -1 : 1) * (12 + i * 2)}px`, animationDelay: `-${i * 0.35}s`, width: bag.size, height: bag.size }}>
+              <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>
             </div>
           ))}
         </div>
         <div style={{ position: 'relative', textAlign: 'center', zIndex: 1, padding: '1rem' }}>
-          <style>{`@keyframes bagRise{0%{transform:translateY(0) rotate(0deg);opacity:0}5%{opacity:.06}95%{opacity:.06}100%{transform:translateY(-110vh) rotate(360deg);opacity:0}}@keyframes spin{to{transform:rotate(360deg)}}`}</style>
-          <div style={{ position: 'relative', width: 70, height: 70, margin: '0 auto 14px' }}>
-            <svg viewBox="0 0 100 100" style={{ position: 'absolute', inset: 0, animation: 'spin 2.5s linear infinite' }}>
-              <circle cx="50" cy="50" r="46" fill="none" stroke="#00E309" strokeWidth="1.5" strokeDasharray="180 100" strokeLinecap="round" opacity="0.6"/>
-            </svg>
-            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <img src={logo} alt="" style={{ width: 30, height: 30, objectFit: 'contain' }} />
-            </div>
+          <style>{`@keyframes authReveal{0%{opacity:0;transform:scale(0)}55%{opacity:1;transform:scale(1.04)}75%,100%{opacity:1;transform:scale(1)}}@keyframes authBagRise{0%{transform:translate3d(0,115vh,0) rotate(-18deg) scale(.7);opacity:0}8%{opacity:.78}88%{opacity:.68}100%{transform:translate3d(var(--drift),-20vh,0) rotate(20deg) scale(1);opacity:0}}@keyframes authProgress{0%{transform:translateX(-110%)}100%{transform:translateX(220%)}}.auth-loading-reveal{animation:authReveal 2.8s cubic-bezier(.22,1,.36,1) both;transform-origin:center}.auth-loading-bag{position:absolute;bottom:0;color:#00E309;opacity:0;pointer-events:none;animation:authBagRise 2.25s linear infinite}.auth-loading-progress{animation:authProgress 1.8s ease-in-out infinite}`}</style>
+          <div className="auth-loading-reveal" style={{ position: 'relative', width: 150, height: 150, margin: '0 auto -4px' }}>
+            <img src={logo} alt="" style={{ width: 120, height: 120, objectFit: 'contain' }} />
           </div>
-          <h1 style={{ fontSize: '1.1rem', fontWeight: 800, color: loadingTextColor }}>GURANEZA</h1>
-          <p style={{ fontSize: '0.7rem', color: loadingTextMuted, fontWeight: 300, marginTop: 4 }}>{t("signingIn")}</p>
+          <h1 className="auth-loading-reveal" style={{ fontSize: '1.65rem', fontWeight: 800, color: loadingTextColor, letterSpacing: '0.06em', margin: 0 }}>GURA<span style={{ color: '#00E309' }}>NEZA</span></h1>
+          <p className="auth-loading-reveal" style={{ fontSize: '0.8rem', color: loadingTextMuted, fontWeight: 300, margin: '6px 0 18px' }}>{t("signingIn")}</p>
+          <div aria-hidden="true" style={{ width: 116, height: 3, margin: '0 auto', borderRadius: 3, background: darkMode ? 'rgba(255,255,255,.12)' : 'rgba(0,0,0,.1)', overflow: 'hidden' }}>
+            <div className="auth-loading-progress" style={{ width: '55%', height: '100%', borderRadius: 3, background: '#00E309' }} />
+          </div>
         </div>
       </div>
     );
