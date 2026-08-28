@@ -6,7 +6,7 @@ import logo from '../assets/logo.png';
 import bannerImage from '../assets/barner.png';
 import { 
   FiSearch, FiStar, FiShield, FiCheck, FiDollarSign, FiClock, FiEye, FiHeart,
-  FiMapPin, FiArrowRight, FiPackage, FiShoppingBag, FiHelpCircle
+  FiMapPin, FiArrowRight, FiPackage, FiShoppingBag
 } from 'react-icons/fi';
 
 const translations = {
@@ -315,9 +315,9 @@ function Landing() {
               <p className="hd" style={{ fontSize:'1rem',color:tm,maxWidth:550,margin:0,fontWeight:300,lineHeight:1.6 }}>{t("heroDesc")}</p>
             </div>
             <div className="intro-actions banner-actions" style={{ display:'flex',gap:'.6rem',justifyContent:'center',flexWrap:'wrap',flexShrink:0 }}>
-              <Link to="/login" className="green-hover browse-action" style={{ padding:'.6rem 1.8rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.15)'}`,borderRadius:24,color:tc,fontSize:'.85rem',fontWeight:500,textDecoration:'none' }}><FiShoppingBag size={11}/>{t("browseProducts")}</Link>
+              <Link to="/login" className="green-hover browse-action" style={{ padding:'.6rem 1.8rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.15)'}`,borderRadius:24,color:tc,fontSize:'.85rem',fontWeight:500,textDecoration:'none' }}>{t("browseProducts")}</Link>
               <Link to="/login" className="green-hover green-hover-solid start-selling-action" style={{ padding:'.6rem 1.8rem',border:'none',borderRadius:24,color:'#0a0a14',fontSize:'.85rem',fontWeight:600,textDecoration:'none',background:ac }}>{t("startSelling")}</Link>
-              <Link to="/sell" className="green-hover how-to-sell-action" style={{ padding:'.6rem 1.8rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.15)'}`,borderRadius:24,color:tc,fontSize:'.85rem',fontWeight:500,textDecoration:'none' }}><FiHelpCircle size={11}/>{t("howToSell")}</Link>
+              <Link to="/sell" className="green-hover how-to-sell-action" style={{ padding:'.6rem 1.8rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.15)'}`,borderRadius:24,color:tc,fontSize:'.85rem',fontWeight:500,textDecoration:'none' }}>{t("howToSell")}</Link>
             </div>
           </div>
         </div>
