@@ -227,7 +227,7 @@ function Landing() {
     <div style={{ position: 'relative', minHeight: '100vh', background: bg, fontFamily: "'Inter',system-ui,sans-serif", color: tc, transition: 'background 0.3s, color 0.3s' }}>
       
       <style>{`
-        @keyframes zoomReveal{0%{transform:translateY(-48vh) scale(.08);opacity:0}18%{transform:translateY(-48vh) scale(.08);opacity:1}42%{transform:translateY(0) scale(1);opacity:1}62%{transform:translateY(0) scale(1);opacity:1}84%{transform:translateY(0) scale(8);opacity:.9}100%{transform:translateY(0) scale(28);opacity:0}}
+        @keyframes zoomReveal{0%{transform:scale(.04);opacity:0}18%{transform:scale(.04);opacity:1}42%{transform:scale(1);opacity:1}62%{transform:scale(1);opacity:1}84%{transform:scale(8);opacity:.9}100%{transform:scale(28);opacity:0}}
         @keyframes loadingEntrance{0%{opacity:0;transform:translateY(14px) scale(.92)}14%{opacity:1;transform:translateY(0) scale(1)}70%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-24px) scale(.82)}}
         @keyframes loadingBag{0%{transform:translate3d(0,115vh,0) rotate(-12deg);opacity:0}10%{opacity:.12}100%{transform:translate3d(18px,-25vh,0) rotate(12deg);opacity:0}}
         @keyframes shimmer{0%{opacity:0.3}50%{opacity:0.7}100%{opacity:0.3}}
@@ -278,7 +278,7 @@ function Landing() {
             <div style={{ position:'relative',width:174,height:174,margin:'0 auto -2px' }}>
               <div style={{ position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center' }}><img src={logo} alt="" style={{ width:150,height:150,objectFit:'contain',animation:'zoomReveal 5.2s cubic-bezier(.4,0,.2,1) both' }}/></div>
             </div>
-            <h1 className="loading-brand" style={{ fontSize:'1.65rem',fontWeight:800,color:loadingTc,letterSpacing:'0.06em',margin:0 }}>GURANEZA</h1>
+            <h1 className="loading-brand" style={{ fontSize:'1.65rem',fontWeight:800,color:loadingTc,letterSpacing:'0.06em',margin:0 }}>GURA<span style={{ color:ac }}>NEZA</span></h1>
             <p className="loading-subtitle" style={{ fontSize:'0.8rem',color:loadingTm,fontWeight:300,margin:'6px 0 18px' }}>BuySmart</p>
           </div>
         </div>
