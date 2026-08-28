@@ -291,8 +291,8 @@ function Landing() {
         <div aria-hidden="true" style={{ position:'absolute',zIndex:1,left:0,right:0,bottom:0,height:110,background:`linear-gradient(to bottom, transparent, ${bg})`,pointerEvents:'none' }}/>
       </section>
 
-      <div className="search-tools" style={{ position:'sticky',top:49,zIndex:90,width:'calc(100% - 2rem)',maxWidth:980,margin:'-2.5rem auto 0',background:cbg,backdropFilter:'blur(20px)',WebkitBackdropFilter:'blur(20px)',border:`1px solid ${bc}`,borderRadius:20,boxShadow:darkMode?'0 14px 34px rgba(0,0,0,.35)':'0 14px 34px rgba(0,0,0,.12)' }}>
-        <div style={{ margin:'0 auto',padding:'1rem 1.25rem 1.15rem',background:'transparent' }}>
+      <div className="search-tools" style={{ position:'sticky',top:49,zIndex:90,width:'100%',maxWidth:1080,margin:'0 auto',padding:'.8rem 1rem 1rem',background:`linear-gradient(to bottom, ${bg}, ${bg}90, transparent)`,border:'none',boxShadow:'none' }}>
+        <div style={{ margin:'0 auto',padding:'1rem 1.25rem 1.15rem',background:cbg,backdropFilter:'blur(20px)',WebkitBackdropFilter:'blur(20px)',border:`1px solid ${bc}`,borderRadius:20,boxShadow:darkMode?'0 14px 34px rgba(0,0,0,.35)':'0 14px 34px rgba(0,0,0,.12)' }}>
           <h2 className="search-heading" style={{ fontSize:'1.25rem',fontWeight:700,margin:'0 0 .8rem' }}>Hey there! What are you searching for?</h2>
           <div style={{ display:'flex',width:'100%',gap:'.3rem',alignItems:'center',background:cbg,borderRadius:16,border:`1px solid ${bc}`,padding:'.7rem 1rem',boxShadow:shadow }}>
             <FiSearch size={18} style={{ color:ac }}/><input type="text" placeholder={t("searchPlaceholder")} value={searchTerm} onChange={e=>setSearchTerm(e.target.value)} className="si" style={{ flex:1,border:'none',background:'transparent',fontSize:'.9rem',padding:'.35rem 0',outline:'none',color:tc }}/>
