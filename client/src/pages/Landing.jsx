@@ -291,14 +291,13 @@ function Landing() {
         <div aria-hidden="true" style={{ position:'absolute',zIndex:1,left:0,right:0,bottom:0,height:110,background:`linear-gradient(to bottom, transparent, ${bg})`,pointerEvents:'none' }}/>
       </section>
 
-      <div className="search-tools" style={{ position:'sticky',top:49,zIndex:90,width:'100%',maxWidth:1080,margin:'0 auto',padding:'.8rem 1rem 1rem',background:`linear-gradient(to bottom, ${bg}, ${bg}90, transparent)`,border:'none',boxShadow:'none' }}>
-        <div style={{ margin:'0 auto',padding:'1rem 1.25rem 1.15rem',background:cbg,backdropFilter:'blur(20px)',WebkitBackdropFilter:'blur(20px)',border:`1px solid ${bc}`,borderRadius:20,boxShadow:darkMode?'0 14px 34px rgba(0,0,0,.35)':'0 14px 34px rgba(0,0,0,.12)' }}>
-          <h2 className="search-heading" style={{ fontSize:'1.25rem',fontWeight:700,margin:'0 0 .8rem' }}>Hey there! What are you searching for?</h2>
-          <div style={{ display:'flex',width:'100%',gap:'.3rem',alignItems:'center',background:cbg,borderRadius:16,border:`1px solid ${bc}`,padding:'.7rem 1rem',boxShadow:shadow }}>
-            <FiSearch size={18} style={{ color:ac }}/><input type="text" placeholder={t("searchPlaceholder")} value={searchTerm} onChange={e=>setSearchTerm(e.target.value)} className="si" style={{ flex:1,border:'none',background:'transparent',fontSize:'.9rem',padding:'.35rem 0',outline:'none',color:tc }}/>
+      <div className="search-tools" style={{ position:'sticky',top:49,zIndex:90,width:'100%',maxWidth:1280,margin:'0 auto',padding:'.35rem 1rem .75rem',background:`linear-gradient(to bottom, ${bg}, ${bg}cc, transparent)`,border:'none',boxShadow:'none' }}>
+        <div style={{ margin:'0 auto',background:'transparent' }}>
+          <div style={{ display:'flex',width:'100%',gap:'.45rem',alignItems:'center',background:cbg,backdropFilter:'blur(16px)',WebkitBackdropFilter:'blur(16px)',borderRadius:16,border:`1px solid ${bc}`,padding:'.65rem 1rem',boxShadow:shadow }}>
+            <FiSearch size={17} style={{ color:ac,flexShrink:0 }}/><input type="text" placeholder="Search products..." value={searchTerm} onChange={e=>setSearchTerm(e.target.value)} className="si" style={{ flex:1,border:'none',background:'transparent',fontSize:'.8rem',padding:'.25rem 0',outline:'none',color:tc }}/>
           </div>
-          <div className="category-actions" style={{ display:'flex',gap:'.4rem',padding:'.8rem 0 0',flexWrap:'wrap' }}>
-            {allCategories.slice(0,12).map(cat=>(<button key={cat} onClick={()=>setSelectedCategory(cat)} style={{ padding:'.4rem .85rem',borderRadius:20,border:`1px solid ${selectedCategory===cat?'transparent':darkMode?'rgba(255,255,255,0.08)':'rgba(0,0,0,0.08)'}`,background:selectedCategory===cat?ac:darkMode?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.04)',color:selectedCategory===cat?'#0a0a14':tc,fontSize:'.7rem',fontWeight:selectedCategory===cat?700:500,cursor:'pointer',whiteSpace:'nowrap',transition:'all .2s' }}>{cat}</button>))}
+          <div className="category-actions" style={{ display:'flex',gap:'.45rem',padding:'.45rem 0 0',flexWrap:'nowrap',overflowX:'auto',overflowY:'hidden' }}>
+            {allCategories.slice(0,12).map(cat=>(<button key={cat} onClick={()=>setSelectedCategory(cat)} style={{ padding:'.4rem .95rem',borderRadius:20,border:`1px solid ${selectedCategory===cat?'transparent':darkMode?'rgba(255,255,255,0.08)':'rgba(0,0,0,0.08)'}`,background:selectedCategory===cat?ac:cbg,color:selectedCategory===cat?'#0a0a14':tc,fontSize:'.68rem',fontWeight:selectedCategory===cat?700:500,cursor:'pointer',whiteSpace:'nowrap',transition:'all .2s',boxShadow:shadow }}>{cat}</button>))}
           </div>
         </div>
       </div>
