@@ -119,7 +119,6 @@ function Landing() {
   const [products, setProducts] = useState([]);
   const [productsLoading, setProductsLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
-  const [loadingProgress, setLoadingProgress] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [stats, setStats] = useState({ users: 0, products: 0, shops: 0 });
@@ -151,10 +150,9 @@ function Landing() {
   useEffect(() => { 
     fetchData(); 
     const startedAt = Date.now();
-    const duration = 3600;
+    const duration = 5200;
     const timer = setInterval(() => {
       const progress = Math.min(100, Math.round(((Date.now() - startedAt) / duration) * 100));
-      setLoadingProgress(progress);
       if (progress >= 100) { setIsLoading(false); clearInterval(timer); }
     }, 40);
     return () => clearInterval(timer); 
@@ -229,7 +227,7 @@ function Landing() {
     <div style={{ position: 'relative', minHeight: '100vh', background: bg, fontFamily: "'Inter',system-ui,sans-serif", color: tc, transition: 'background 0.3s, color 0.3s' }}>
       
       <style>{`
-        @keyframes zoomReveal{0%{transform:scale(.65);opacity:0}12%{transform:scale(1);opacity:1}55%{transform:scale(1.12);opacity:1}82%{transform:scale(8);opacity:.9}100%{transform:scale(28);opacity:0}}
+        @keyframes zoomReveal{0%{transform:translateY(-48vh) scale(.08);opacity:0}18%{transform:translateY(-48vh) scale(.08);opacity:1}42%{transform:translateY(0) scale(1);opacity:1}62%{transform:translateY(0) scale(1);opacity:1}84%{transform:translateY(0) scale(8);opacity:.9}100%{transform:translateY(0) scale(28);opacity:0}}
         @keyframes loadingEntrance{0%{opacity:0;transform:translateY(14px) scale(.92)}14%{opacity:1;transform:translateY(0) scale(1)}70%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-24px) scale(.82)}}
         @keyframes loadingBag{0%{transform:translate3d(0,115vh,0) rotate(-12deg);opacity:0}10%{opacity:.12}100%{transform:translate3d(18px,-25vh,0) rotate(12deg);opacity:0}}
         @keyframes shimmer{0%{opacity:0.3}50%{opacity:0.7}100%{opacity:0.3}}
@@ -244,8 +242,8 @@ function Landing() {
         .green-hover-solid:hover{background-color:#18f326!important;color:#0a0a14!important}
         @keyframes floatBag{0%{transform:translate3d(0,110vh,0) rotate(-12deg);opacity:0}12%{opacity:.08}50%{transform:translate3d(14px,35vh,0) rotate(8deg)}88%{opacity:.08}100%{transform:translate3d(-10px,-25vh,0) rotate(-6deg);opacity:0}}
         .floating-bag{position:absolute;color:${ac};opacity:0;pointer-events:none;animation:floatBag 14s linear infinite}
-        .loading-bag{position:absolute;color:${ac};opacity:0;pointer-events:none;animation:loadingBag 4.5s linear infinite}
-        .loading-brand{animation:loadingEntrance .8s .25s ease-out both}.loading-subtitle{animation:loadingEntrance .7s .55s ease-out both}.loading-progress{animation:loadingEntrance .7s .8s ease-out both}
+        .loading-bag{position:absolute;color:${ac};opacity:0;pointer-events:none;animation:loadingBag 6.5s ease-in-out infinite}
+        .loading-brand{animation:loadingEntrance 5s .15s ease-in-out both}.loading-subtitle{animation:loadingEntrance 5s .3s ease-in-out both}
         .si::placeholder{color:${darkMode?'rgba(255,255,255,0.4)':'rgba(0,0,0,0.4)'}}
         @media(max-width:640px){.ht{font-size:2.2rem!important}.hd{font-size:.95rem!important}.pg{grid-template-columns:repeat(2,1fr)!important;gap:.5rem!important}.sr{gap:1.5rem!important}.sn{font-size:1.5rem!important}.hide-mobile{display:none!important}.hero-btns-mobile{display:flex!important;flex-direction:column!important;gap:.5rem!important;align-items:center!important}.intro-row{align-items:center!important}.intro-copy{text-align:center!important}.banner-actions{width:100%!important;margin-top:.75rem!important;flex-direction:row!important;align-items:stretch!important;gap:.3rem!important}.banner-actions a{flex:1 1 0!important;min-width:0!important;padding:.5rem .25rem!important;font-size:.62rem!important;white-space:nowrap!important;text-align:center!important}.marketplace-row{justify-content:center!important}.search-heading{font-size:1.15rem!important;text-align:center!important;margin-bottom:.55rem!important}.search-tools>div{padding:.65rem .75rem .8rem!important}.search-tools input{font-size:.8rem!important}.category-actions{justify-content:flex-start!important;gap:.3rem!important;padding-top:.55rem!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important}.category-actions::-webkit-scrollbar{display:none!important}.category-actions button{flex:0 0 auto!important;padding:.3rem .6rem!important;font-size:.62rem!important}}
         @media(min-width:1101px){.pg2{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:1rem!important}}
@@ -278,14 +276,10 @@ function Landing() {
           </div>
           <div style={{ position:'relative',textAlign:'center',zIndex:1 }}>
             <div style={{ position:'relative',width:174,height:174,margin:'0 auto -2px' }}>
-              <div style={{ position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center' }}><img src={logo} alt="" style={{ width:150,height:150,objectFit:'contain',animation:'zoomReveal 3.6s ease-in-out both' }}/></div>
+              <div style={{ position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center' }}><img src={logo} alt="" style={{ width:150,height:150,objectFit:'contain',animation:'zoomReveal 5.2s cubic-bezier(.4,0,.2,1) both' }}/></div>
             </div>
             <h1 className="loading-brand" style={{ fontSize:'1.65rem',fontWeight:800,color:loadingTc,letterSpacing:'0.06em',margin:0 }}>GURANEZA</h1>
             <p className="loading-subtitle" style={{ fontSize:'0.8rem',color:loadingTm,fontWeight:300,margin:'6px 0 18px' }}>BuySmart</p>
-            <div className="loading-progress" style={{ width:180,margin:'0 auto' }}>
-              <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',fontSize:'.65rem',color:loadingTm,marginBottom:6 }}><span>Loading</span><span style={{ color:ac,fontWeight:700 }}>{loadingProgress}%</span></div>
-              <div style={{ height:5,borderRadius:10,overflow:'hidden',background:darkMode?'rgba(255,255,255,.12)':'rgba(0,0,0,.1)' }}><div style={{ height:'100%',width:`${loadingProgress}%`,borderRadius:10,background:ac,transition:'width .08s linear',boxShadow:`0 0 10px ${ac}` }}/></div>
-            </div>
           </div>
         </div>
       )}
