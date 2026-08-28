@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import api from '../lib/api';
 import { useTheme } from '../context/ThemeContext';
 import logo from '../assets/logo.png';
+import vennLogo from '../assets/venn.png';
 import videoGif from '../assets/video.gif';
 
 const translations = {
@@ -171,21 +172,30 @@ function Login({ setUser }) {
       <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', background: loadingBg }}>
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
           {floatingBags.map((bag, i) => (
-            <div key={i} className="auth-loading-bag" style={{ left: bag.left, '--drift': `${(i % 2 ? -1 : 1) * (12 + i * 2)}px`, animationDelay: `-${i * 0.35}s`, width: bag.size, height: bag.size }}>
+            <div key={i} className="auth-loading-bag" style={{ left: `${3 + i * 9}%`, '--drift': `${(i % 2 ? -1 : 1) * (12 + i * 2)}px`, animationDelay: `-${i * 0.35}s`, width: 18 + (i % 4) * 4, height: 18 + (i % 4) * 4 }}>
               <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>
             </div>
           ))}
+          <div className="auth-loading-bag" style={{ left:'7%', '--drift':'-26px', animationDelay:'-1.9s', width:46, height:46 }}><svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></div>
+          <div className="auth-loading-bag" style={{ left:'24%', '--drift':'24px', animationDelay:'-0.8s', width:54, height:54 }}><svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></div>
+          <div className="auth-loading-bag" style={{ left:'42%', '--drift':'-28px', animationDelay:'-2.1s', width:40, height:40 }}><svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></div>
+          <div className="auth-loading-bag" style={{ left:'58%', '--drift':'26px', animationDelay:'-1.3s', width:62, height:62 }}><svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></div>
+          <div className="auth-loading-bag" style={{ left:'76%', '--drift':'-24px', animationDelay:'-0.3s', width:48, height:48 }}><svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></div>
         </div>
         <div style={{ position: 'relative', textAlign: 'center', zIndex: 1, padding: '1rem' }}>
-          <style>{`@keyframes authReveal{0%{opacity:0;transform:scale(0)}55%{opacity:1;transform:scale(1.04)}75%,100%{opacity:1;transform:scale(1)}}@keyframes authBagRise{0%{transform:translate3d(0,115vh,0) rotate(-18deg) scale(.7);opacity:0}8%{opacity:.78}88%{opacity:.68}100%{transform:translate3d(var(--drift),-20vh,0) rotate(20deg) scale(1);opacity:0}}@keyframes authProgress{0%{transform:translateX(-110%)}100%{transform:translateX(220%)}}.auth-loading-reveal{animation:authReveal 2.8s cubic-bezier(.22,1,.36,1) both;transform-origin:center}.auth-loading-bag{position:absolute;bottom:0;color:#00E309;opacity:0;pointer-events:none;animation:authBagRise 2.25s linear infinite}.auth-loading-progress{animation:authProgress 1.8s ease-in-out infinite}`}</style>
+          <style>{`@keyframes authReveal{0%{opacity:0;transform:scale(0)}55%{opacity:1;transform:scale(1.04)}75%,100%{opacity:1;transform:scale(1)}}@keyframes authBagRise{0%{transform:translate3d(0,115vh,0) rotate(-18deg) scale(.7);opacity:0}8%{opacity:.78}88%{opacity:.68}100%{transform:translate3d(var(--drift),-20vh,0) rotate(20deg) scale(1);opacity:0}}@keyframes authProgress{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}.auth-loading-reveal{animation:authReveal 2.8s cubic-bezier(.22,1,.36,1) both;transform-origin:center}.auth-loading-bag{position:absolute;bottom:0;color:#00E309;opacity:0;pointer-events:none;animation:authBagRise 2.25s linear infinite}.auth-loading-progress{animation:authProgress 2.8s cubic-bezier(.22,1,.36,1) both}`}</style>
           <div className="auth-loading-reveal" style={{ position: 'relative', width: 150, height: 150, margin: '0 auto -4px' }}>
             <img src={logo} alt="" style={{ width: 120, height: 120, objectFit: 'contain' }} />
           </div>
           <h1 className="auth-loading-reveal" style={{ fontSize: '1.65rem', fontWeight: 800, color: loadingTextColor, letterSpacing: '0.06em', margin: 0 }}>GURA<span style={{ color: '#00E309' }}>NEZA</span></h1>
-          <p className="auth-loading-reveal" style={{ fontSize: '0.8rem', color: loadingTextMuted, fontWeight: 300, margin: '6px 0 18px' }}>{t("signingIn")}</p>
+          <p className="auth-loading-reveal" style={{ fontSize: '0.8rem', color: loadingTextMuted, fontWeight: 300, margin: '6px 0 18px' }}>BuySmart</p>
           <div aria-hidden="true" style={{ width: 116, height: 3, margin: '0 auto', borderRadius: 3, background: darkMode ? 'rgba(255,255,255,.12)' : 'rgba(0,0,0,.1)', overflow: 'hidden' }}>
-            <div className="auth-loading-progress" style={{ width: '55%', height: '100%', borderRadius: 3, background: '#00E309' }} />
+            <div className="auth-loading-progress" style={{ width: '100%', height: '100%', borderRadius: 3, background: '#00E309', transformOrigin: 'left' }} />
           </div>
+        </div>
+        <div className="auth-loading-reveal" style={{ position:'absolute',bottom:'7%',left:0,right:0,display:'flex',alignItems:'center',justifyContent:'center',gap:'.45rem',whiteSpace:'nowrap' }}>
+          <img src={vennLogo} alt="VeNN" style={{ width:38,height:38,objectFit:'contain' }} />
+          <span style={{ color:'#f0445f',fontSize:'.78rem',fontWeight:800,letterSpacing:'.04em' }}>VeNN</span>
         </div>
       </div>
     );
