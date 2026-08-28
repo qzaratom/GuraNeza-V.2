@@ -21,7 +21,6 @@ import Tickets from './pages/Tickets';
 import Sell from './pages/Sell';
 import MyProducts from './pages/MyProducts';
 import Admin from './pages/Admin';
-import logo from './assets/logo.png';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -45,7 +44,6 @@ function AuthenticatedRedirect({ user }) {
 function App() {
   const { darkMode } = useTheme();
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     checkUser();
@@ -60,8 +58,7 @@ function App() {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) { await fetchUserFromBackend(session.user); }
-      else { setLoading(false); }
-    } catch (error) { setLoading(false); }
+    } catch (error) { }
   };
 
   const fetchUserFromBackend = async (authUser) => {
@@ -71,28 +68,7 @@ function App() {
       const response = await api.get(`/auth/refresh/${authUser.id}`);
       if (response.data.user) setUser(response.data.user);
     } catch (error) { if (error.response?.status === 404) setUser(null); }
-    finally { setLoading(false); }
   };
-
-  if (loading) {
-    return (
-      <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', background: darkMode ? '#0a0a14' : '#ffffff' }}>
-        <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
-        <div style={{ position: 'relative', textAlign: 'center' }}>
-          <div style={{ position: 'relative', width: 80, height: 80, margin: '0 auto 16px' }}>
-            <svg viewBox="0 0 100 100" style={{ position: 'absolute', inset: 0, animation: 'spin 2.5s linear infinite' }}>
-              <circle cx="50" cy="50" r="46" fill="none" stroke="#00E309" strokeWidth="1.5" strokeDasharray="180 100" strokeLinecap="round" opacity="0.6"/>
-            </svg>
-            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <img src={logo} alt="" style={{ width: 36, height: 36, objectFit: 'contain' }} />
-            </div>
-          </div>
-          <h1 style={{ fontSize: '1.3rem', fontWeight: 800, color: darkMode ? 'white' : '#1a1a2e', letterSpacing: '0.06em' }}>GURANEZA</h1>
-          <p style={{ fontSize: '0.75rem', color: darkMode ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)', fontWeight: 300, marginTop: 4 }}>BuySmart</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <Router>
