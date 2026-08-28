@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import api from '../lib/api';
 import { useTheme } from '../context/ThemeContext';
 import logo from '../assets/logo.png';
-import videoGif from '../assets/video.gif';
+import bannerImage from '../assets/barner.png';
 import { 
   FiSearch, FiStar, FiShield, FiCheck, FiDollarSign, FiClock, FiEye, FiHeart,
   FiMapPin, FiArrowRight, FiPackage
@@ -13,8 +13,8 @@ const translations = {
   en: {
     marketplace: "Rwanda's #1 Marketplace",
     heroTitle: "Buy & Sell", heroTitleSpan: "Anything", heroTitleEnd: "in Rwanda",
-    heroDesc: "The safest way to buy and sell in Rwanda. Join thousands already trading on GuraNeza.",
-    startSelling: "Start Selling Now", browseProducts: "Browse Products",
+    heroDesc: "Buy Smart. Sell Easy.",
+    startSelling: "Start Selling Now", browseProducts: "Browse Products", howToSell: "How to sell?",
     users: "Users", products: "Products", shops: "Shops",
     searchPlaceholder: "Search products, sellers...",
     featuredProducts: "Featured Products",
@@ -22,7 +22,7 @@ const translations = {
     tryAdjusting: "Try adjusting your search or filters",
     viewAll: "View All Products",
     ctaTitle: "Ready to", ctaTitleSpan: "Sell?",
-    ctaDesc: "Join thousands of Rwandans already using GuraNeza.",
+    ctaDesc: "Create an account. Start buying and selling today.",
     createAccount: "Create Free Account",
     signIn: "Sign In", getStarted: "Get Started",
     negotiable: "Negotiable", fixed: "Fixed", noDescription: "No description",
@@ -40,7 +40,8 @@ const translations = {
     tryAdjusting: "Essayez d'ajuster vos filtres",
     viewAll: "Voir Tout",
     ctaTitle: "Prêt à", ctaTitleSpan: "Vendre?",
-    ctaDesc: "Rejoignez des milliers de Rwandais sur GuraNeza.",
+    ctaDesc: "Créez un compte. Commencez à acheter et vendre aujourd'hui.",
+    howToSell: "Comment vendre?",
     createAccount: "Créer un Compte",
     signIn: "Connexion", getStarted: "Commencer",
     negotiable: "Négociable", fixed: "Fixe", noDescription: "Pas de description",
@@ -58,7 +59,8 @@ const translations = {
     tryAdjusting: "Gerageza guhindura ibyiciro",
     viewAll: "Reba Byose",
     ctaTitle: "Witeguye", ctaTitleSpan: "Kugurisha?",
-    ctaDesc: "Ifatanye n'abantu benshi bo mu Rwanda kuri GuraNeza.",
+    ctaDesc: "Fungura konti. Tangira kugura no kugurisha uyu munsi.",
+    howToSell: "Wagurisha ute?",
     createAccount: "Fungura Konti",
     signIn: "Injira", getStarted: "Tangira",
     negotiable: "Birahuzwa", fixed: "Birakomeye", noDescription: "Nta bisobanuro",
@@ -141,8 +143,6 @@ function Landing() {
   const tm = darkMode ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.5)';
   const bc = darkMode ? 'rgba(0,227,9,0.08)' : 'rgba(0,0,0,0.06)';
   const navBg = darkMode ? 'rgba(26,26,46,0.5)' : 'rgba(255,255,255,0.9)';
-  const heroBg = darkMode ? '#0a0a14' : '#f1f5f9';
-  const heroOverlay = darkMode ? 'linear-gradient(180deg, rgba(10,10,20,0.55) 0%, rgba(10,10,20,0.85) 80%, rgba(10,10,20,0.95) 100%)' : 'linear-gradient(180deg, rgba(241,245,249,0.4) 0%, rgba(241,245,249,0.8) 80%, rgba(248,250,252,0.95) 100%)';
   const loadingBg = darkMode ? '#0a0a14' : '#ffffff';
   const loadingTc = darkMode ? 'white' : '#1a1a2e';
   const loadingTm = darkMode ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)';
@@ -218,13 +218,10 @@ function Landing() {
     return badges;
   };
 
-  const floatingBags = useMemo(() => [...Array(15)].map((_, i) => ({ left: `${Math.random() * 95}%`, delay: `${Math.random() * 4}s`, duration: `${3 + Math.random() * 5}s`, size: 10 + Math.random() * 16, opacity: darkMode ? 0.05 : 0.06 })), [darkMode]);
-
   return (
     <div style={{ position: 'relative', minHeight: '100vh', background: bg, fontFamily: "'Inter',system-ui,sans-serif", color: tc, transition: 'background 0.3s, color 0.3s' }}>
       
       <style>{`
-        @keyframes bagRise{0%{transform:translateY(0) rotate(0deg);opacity:0}5%{opacity:.07}95%{opacity:.07}100%{transform:translateY(-110vh) rotate(360deg);opacity:0}}
         @keyframes spin{to{transform:rotate(360deg)}}
         @keyframes shimmer{0%{opacity:0.3}50%{opacity:0.7}100%{opacity:0.3}}
         .badge-circle{transition:all 0.2s}.badge-circle:hover{transform:scale(1.15)}
@@ -232,8 +229,13 @@ function Landing() {
         .badge-wrapper:hover .badge-tooltip{opacity:1!important;visibility:visible!important}
         .card-hover{transition:all 0.25s}.card-hover:hover{transform:translateY(-3px);box-shadow:${darkMode?'0 8px 28px rgba(0,0,0,0.35)':'0 8px 28px rgba(0,0,0,0.08)'}}
         .si::placeholder{color:${darkMode?'rgba(255,255,255,0.4)':'rgba(0,0,0,0.4)'}}
-        @media(max-width:640px){.ht{font-size:2.2rem!important}.hd{font-size:.95rem!important}.pg{grid-template-columns:repeat(2,1fr)!important;gap:.5rem!important}.sr{gap:1.5rem!important}.sn{font-size:1.5rem!important}.hide-mobile{display:none!important}.hero-btns-mobile{display:flex!important;flex-direction:column!important;gap:.5rem!important;align-items:center!important}}
-        @media(min-width:641px){.pg2{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))!important;gap:1rem!important}.hero-btns-mobile{display:none!important}}
+        @media(max-width:640px){.ht{font-size:2.2rem!important}.hd{font-size:.95rem!important}.pg{grid-template-columns:repeat(2,1fr)!important;gap:.5rem!important}.sr{gap:1.5rem!important}.sn{font-size:1.5rem!important}.hide-mobile{display:none!important}.hero-btns-mobile{display:flex!important;flex-direction:column!important;gap:.5rem!important;align-items:center!important}.intro-row{align-items:center!important}.intro-copy{text-align:center!important}.banner-actions{width:100%!important;margin-top:.75rem!important;flex-direction:row!important;align-items:stretch!important;gap:.3rem!important}.banner-actions a{flex:1 1 0!important;min-width:0!important;padding:.5rem .25rem!important;font-size:.62rem!important;white-space:nowrap!important;text-align:center!important}.marketplace-row{justify-content:center!important}.search-heading{font-size:1rem!important;text-align:center!important;margin-bottom:.55rem!important}.search-tools>div{padding:.65rem .75rem .8rem!important}.search-tools input{font-size:.8rem!important}.category-actions{justify-content:flex-start!important;gap:.3rem!important;padding-top:.55rem!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important}.category-actions::-webkit-scrollbar{display:none!important}.category-actions button{flex:0 0 auto!important;padding:.3rem .6rem!important;font-size:.62rem!important}}
+        @media(min-width:1101px){.pg2{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:1rem!important}}
+        @media(min-width:801px) and (max-width:1100px){.pg2{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:1rem!important}}
+        @media(min-width:641px) and (max-width:800px){.pg2{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:.75rem!important}.hero-btns-mobile{display:none!important}}
+        @media(max-width:640px){.pg2{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:.6rem!important}}
+        @media(max-width:760px){.intro-row{flex-direction:column!important;align-items:flex-start!important}.intro-actions{justify-content:flex-start!important}}
+        @media(max-width:640px){.banner-content{padding:2.5rem 1.25rem 4rem!important}.banner-actions{width:100%!important}.banner-actions a{flex:1!important;text-align:center!important}}
       `}</style>
 
       {/* Loading Screen */}
@@ -271,48 +273,38 @@ function Landing() {
         </div>
       </header>
 
-      {/* Hero */}
-      <section style={{ position:'relative',minHeight:'85vh',display:'flex',alignItems:'center',justifyContent:'center',overflow:'hidden',background:heroBg }}>
-        <div style={{ position:'absolute',inset:0 }}><img src={videoGif} alt="" style={{ width:'100%',height:'100%',objectFit:'cover',opacity:darkMode?0.45:0.18 }}/><div style={{ position:'absolute',inset:0,background:heroOverlay }}/></div>
-        <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none' }}>{floatingBags.map((bag,i)=>(<div key={i} style={{ position:'absolute',left:bag.left,bottom:'-30px',animation:`bagRise ${bag.duration} linear infinite`,animationDelay:bag.delay,opacity:bag.opacity }}><svg width={bag.size} height={bag.size} viewBox="0 0 24 24" fill={darkMode?"white":"#0a0a14"}><path d="M16 6l-2-3h-4L8 6H3v15h18V6h-5zM8.5 7l2-3h3l2 3H8.5zM5 19V8h2v11H5zm4 0V8h2v11H9zm4 0V8h2v11h-2zm4 0V8h2v11h-2z"/></svg></div>))}</div>
-        <div style={{ position:'relative',zIndex:10,textAlign:'center',padding:'2.5rem 1rem',maxWidth:750 }}>
-          <div style={{ display:'inline-flex',alignItems:'center',gap:'.5rem',padding:'.3rem .9rem',borderRadius:24,border:`1px solid ${darkMode?'rgba(0,227,9,.2)':'rgba(0,227,9,.15)'}`,background:darkMode?'rgba(0,227,9,.05)':'rgba(0,227,9,.04)',marginBottom:'1.2rem' }}><div style={{ width:6,height:6,borderRadius:'50%',background:ac }}/><span style={{ fontSize:'.7rem',color:ac,fontWeight:500,letterSpacing:'.1em',textTransform:'uppercase' }}>{t("marketplace")}</span></div>
-          <h1 className="ht" style={{ fontSize:'clamp(2.2rem,5vw,4rem)',fontWeight:800,lineHeight:1.1,marginBottom:'.8rem' }}>{t("heroTitle")}<br/><span style={{ color:ac }}>{t("heroTitleSpan")}</span> {t("heroTitleEnd")}</h1>
-          <p className="hd" style={{ fontSize:'1rem',color:tm,maxWidth:550,margin:'0 auto 2rem',fontWeight:300,lineHeight:1.6 }}>{t("heroDesc")}</p>
-          <div className="hide-mobile" style={{ display:'flex',gap:'.6rem',justifyContent:'center',flexWrap:'wrap' }}>
-            <Link to="/login" style={{ padding:'.6rem 1.8rem',border:'none',borderRadius:24,color:'#0a0a14',fontSize:'.85rem',fontWeight:600,textDecoration:'none',background:ac }}>{t("startSelling")}</Link>
-            <Link to="/login" style={{ padding:'.6rem 1.8rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.15)'}`,borderRadius:24,color:tc,fontSize:'.85rem',fontWeight:500,textDecoration:'none' }}>{t("browseProducts")}</Link>
-          </div>
-          <div className="sr" style={{ display:'flex',gap:'2rem',justifyContent:'center',marginTop:'2rem',flexWrap:'wrap' }}>
-            <div style={{ textAlign:'center',minWidth:65 }}><div className="sn" style={{ fontSize:'1.6rem',fontWeight:700,color:ac }}>{displayedStats.users.toLocaleString()}</div><div style={{ fontSize:'.6rem',color:tm,letterSpacing:'.1em',textTransform:'uppercase',marginTop:'.1rem' }}>{t("users")}</div></div>
-            <div style={{ textAlign:'center',minWidth:65 }}><div className="sn" style={{ fontSize:'1.6rem',fontWeight:700,color:ac }}>{displayedStats.products.toLocaleString()}</div><div style={{ fontSize:'.6rem',color:tm,letterSpacing:'.1em',textTransform:'uppercase',marginTop:'.1rem' }}>{t("products")}</div></div>
-            <div style={{ textAlign:'center',minWidth:65 }}><div className="sn" style={{ fontSize:'1.6rem',fontWeight:700,color:ac }}>{displayedStats.shops.toLocaleString()}</div><div style={{ fontSize:'.6rem',color:tm,letterSpacing:'.1em',textTransform:'uppercase',marginTop:'.1rem' }}>{t("shops")}</div></div>
-          </div>
-          <div className="hero-btns-mobile" style={{ display:'none',marginTop:'2rem' }}>
-            <Link to="/login" style={{ padding:'.6rem 1.8rem',border:'none',borderRadius:24,color:'#0a0a14',fontSize:'.85rem',fontWeight:600,textDecoration:'none',background:ac,display:'inline-block',width:'80%',maxWidth:'280px' }}>{t("startSelling")}</Link>
-            <Link to="/login" style={{ padding:'.6rem 1.8rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.15)'}`,borderRadius:24,color:tc,fontSize:'.85rem',fontWeight:500,textDecoration:'none',display:'inline-block',width:'80%',maxWidth:'280px' }}>{t("browseProducts")}</Link>
-          </div>
-        </div>
-        <div style={{ position:'absolute',bottom:0,left:0,right:0,height:'30%',background:`linear-gradient(to bottom, transparent, ${bg})`,zIndex:5,pointerEvents:'none' }}/>
-      </section>
-
-      {/* Products Section */}
-      <section style={{ position:'relative',zIndex:10,maxWidth:1280,margin:'0 auto',padding:'0 1rem' }}>
-        <div style={{ margin:'0 -1rem',padding:'.6rem 1rem',position:'sticky',top:52,zIndex:90 }}>
-          <div style={{ background:darkMode?'rgba(20,20,35,0.5)':'rgba(255,255,255,0.6)',backdropFilter:'blur(24px)',borderRadius:18,border:`1px solid ${darkMode?'rgba(255,255,255,0.12)':'rgba(0,0,0,0.06)'}`,padding:'.5rem 1rem',boxShadow:darkMode?'0 8px 32px rgba(0,0,0,0.4)':'0 8px 32px rgba(0,0,0,0.08)' }}>
-            <div style={{ display:'flex',gap:'.3rem',alignItems:'center' }}>
-              <FiSearch size={16} style={{ color:ac }}/>
-              <input type="text" placeholder={t("searchPlaceholder")} value={searchTerm} onChange={e=>setSearchTerm(e.target.value)} className="si" style={{ flex:1,border:'none',background:'transparent',fontSize:'.85rem',padding:'.45rem 0',outline:'none',color:tc }}/>
+      {/* Discovery */}
+      <section style={{ position:'relative',width:'100%',backgroundImage:`linear-gradient(90deg, ${darkMode?'rgba(10,10,20,.88)':'rgba(248,250,252,.82)'}, ${darkMode?'rgba(10,10,20,.58)':'rgba(248,250,252,.58)'}), url(${bannerImage})`,backgroundSize:'cover',backgroundPosition:'center',padding:'0',overflow:'hidden' }}>
+        <div className="banner-content" style={{ position:'relative',zIndex:2,maxWidth:1280,margin:'0 auto',padding:'3.5rem 1rem 4rem' }}>
+          <div className="intro-row" style={{ display:'flex',alignItems:'center',justifyContent:'space-between',gap:'2rem' }}>
+            <div className="intro-copy">
+              <h1 className="ht" style={{ fontSize:'clamp(2.2rem,5vw,4rem)',fontWeight:800,lineHeight:1.1,marginBottom:'.8rem' }}>{t("heroTitle")}<br/><span style={{ color:ac }}>{t("heroTitleSpan")}</span> {t("heroTitleEnd")}</h1>
+              <p className="hd" style={{ fontSize:'1rem',color:tm,maxWidth:550,margin:0,fontWeight:300,lineHeight:1.6 }}>{t("heroDesc")}</p>
+            </div>
+            <div className="intro-actions banner-actions" style={{ display:'flex',gap:'.6rem',justifyContent:'center',flexWrap:'wrap',flexShrink:0 }}>
+              <Link to="/login" style={{ padding:'.6rem 1.8rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.15)'}`,borderRadius:24,color:tc,fontSize:'.85rem',fontWeight:500,textDecoration:'none' }}>{t("browseProducts")}</Link>
+              <Link to="/login" style={{ padding:'.6rem 1.8rem',border:'none',borderRadius:24,color:'#0a0a14',fontSize:'.85rem',fontWeight:600,textDecoration:'none',background:ac }}>{t("startSelling")}</Link>
+              <Link to="/sell" style={{ padding:'.6rem 1.8rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.15)'}`,borderRadius:24,color:tc,fontSize:'.85rem',fontWeight:500,textDecoration:'none' }}>{t("howToSell")}</Link>
             </div>
           </div>
         </div>
+        <div aria-hidden="true" style={{ position:'absolute',zIndex:1,left:0,right:0,bottom:0,height:110,background:`linear-gradient(to bottom, transparent, ${bg})`,pointerEvents:'none' }}/>
+      </section>
 
-        <div style={{ display:'flex',gap:'.4rem',padding:'.5rem 0',flexWrap:'wrap' }}>
-          {allCategories.slice(0,12).map(cat=>(
-            <button key={cat} onClick={()=>setSelectedCategory(cat)} style={{ padding:'.4rem .9rem',borderRadius:20,border:`1px solid ${selectedCategory===cat?'transparent':darkMode?'rgba(255,255,255,0.08)':'rgba(0,0,0,0.08)'}`,background:selectedCategory===cat?ac:darkMode?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.04)',color:selectedCategory===cat?'#0a0a14':tc,fontSize:'.7rem',fontWeight:selectedCategory===cat?700:500,cursor:'pointer',whiteSpace:'nowrap',transition:'all .2s' }}>{cat}</button>
-          ))}
+      <div className="search-tools" style={{ position:'sticky',top:49,zIndex:90,background:darkMode?'rgba(10,10,20,.48)':'rgba(248,250,252,.5)',backdropFilter:'blur(16px)',WebkitBackdropFilter:'blur(16px)',borderBottom:`1px solid ${darkMode?'rgba(255,255,255,.12)':'rgba(255,255,255,.65)'}`,boxShadow:'0 8px 24px rgba(0,0,0,.08)' }}>
+        <div style={{ maxWidth:1280,margin:'0 auto',padding:'.8rem 1rem 1rem',background:'transparent' }}>
+          <h2 className="search-heading" style={{ fontSize:'1.25rem',fontWeight:700,margin:'0 0 .8rem' }}>Hey there! What are you searching for?</h2>
+          <div style={{ display:'flex',width:'100%',gap:'.3rem',alignItems:'center',background:cbg,borderRadius:16,border:`1px solid ${bc}`,padding:'.7rem 1rem',boxShadow:shadow }}>
+            <FiSearch size={18} style={{ color:ac }}/><input type="text" placeholder={t("searchPlaceholder")} value={searchTerm} onChange={e=>setSearchTerm(e.target.value)} className="si" style={{ flex:1,border:'none',background:'transparent',fontSize:'.9rem',padding:'.35rem 0',outline:'none',color:tc }}/>
+          </div>
+          <div className="category-actions" style={{ display:'flex',gap:'.4rem',padding:'.8rem 0 0',flexWrap:'wrap' }}>
+            {allCategories.slice(0,12).map(cat=>(<button key={cat} onClick={()=>setSelectedCategory(cat)} style={{ padding:'.4rem .85rem',borderRadius:20,border:`1px solid ${selectedCategory===cat?'transparent':darkMode?'rgba(255,255,255,0.08)':'rgba(0,0,0,0.08)'}`,background:selectedCategory===cat?ac:darkMode?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.04)',color:selectedCategory===cat?'#0a0a14':tc,fontSize:'.7rem',fontWeight:selectedCategory===cat?700:500,cursor:'pointer',whiteSpace:'nowrap',transition:'all .2s' }}>{cat}</button>))}
+          </div>
         </div>
+      </div>
 
+      {/* Products Section */}
+      <section style={{ position:'relative',zIndex:10,maxWidth:1280,margin:'0 auto',padding:'0 1rem' }}>
         <div style={{ marginBottom:'1rem',marginTop:'.5rem' }}>
           <h2 style={{ fontSize:'1.3rem',fontWeight:700 }}>{t("featuredProducts")}</h2>
           <div style={{ width:40,height:3,background:ac,borderRadius:2,marginTop:'.3rem' }}/>
@@ -377,6 +369,9 @@ function Landing() {
           )}
           <div style={{ textAlign:'center',marginTop:'1.5rem' }}>
             <Link to="/login" style={{ display:'inline-flex',alignItems:'center',gap:'.4rem',padding:'.6rem 2rem',border:`1px solid ${darkMode?'rgba(255,255,255,.2)':'rgba(0,0,0,.12)'}`,borderRadius:22,color:tc,fontSize:'.8rem',fontWeight:500,textDecoration:'none' }}>{t("viewAll")}<FiArrowRight size={14}/></Link>
+          </div>
+          <div className="sr" style={{ display:'flex',gap:'3rem',justifyContent:'center',marginTop:'2rem',paddingTop:'1rem',borderTop:`1px solid ${bc}`,flexWrap:'wrap' }}>
+            {[['users',displayedStats.users],['products',displayedStats.products],['shops',displayedStats.shops]].map(([key,value])=><div key={key} style={{ textAlign:'center',minWidth:80 }}><div className="sn" style={{ fontSize:'1.5rem',fontWeight:700,color:ac }}>{value.toLocaleString()}</div><div style={{ fontSize:'.6rem',color:tm,letterSpacing:'.1em',textTransform:'uppercase',marginTop:'.1rem' }}>{t(key)}</div></div>)}
           </div>
         </div>
       </section>

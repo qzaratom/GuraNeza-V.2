@@ -20,6 +20,7 @@ const translations = {
     editProfileNote: "After signing in, you can edit your phone number, location, and bio from your profile page.",
     backToHome: "Back to Home",
     errorConnecting: "Error connecting to server.",
+    accountNotFound: "No GuraNeza account was found for this Google account. Please choose Create Account.",
     language: "Language",
     viewProfile: "View Profile",
   },
@@ -36,6 +37,7 @@ const translations = {
     editProfileNote: "Après connexion, modifiez votre téléphone, adresse et bio depuis votre profil.",
     backToHome: "Retour à l'Accueil",
     errorConnecting: "Erreur de connexion.",
+    accountNotFound: "Aucun compte GuraNeza n'a été trouvé pour ce compte Google. Choisissez Créer un Compte.",
     language: "Langue",
     viewProfile: "Voir Profil",
   },
@@ -52,6 +54,7 @@ const translations = {
     editProfileNote: "Nyuma yo kwinjira, uhindure nimero, aho uherereye na bio bivuye kuri paji yawe.",
     backToHome: "Subira Ahabanza",
     errorConnecting: "Ikosa mu guhuza.",
+    accountNotFound: "Nta konti ya GuraNeza yabonetse kuri iyi konti ya Google. Hitamo Fungura Konti.",
     language: "Ururimi",
     viewProfile: "Reba Umwirondoro",
   },
@@ -65,6 +68,7 @@ function Login({ setUser }) {
   const [lang, setLang] = useState(() => localStorage.getItem("guraneza_language") || "en");
   const [langOpen, setLangOpen] = useState(false);
   const langRef = useRef(null);
+  const authIntentRef = useRef(localStorage.getItem('guraneza_auth_intent') || 'signin');
 
   const t = (key) => translations[lang]?.[key] || translations.en[key] || key;
   const langLabels = { en: "EN", fr: "FR", rw: "RW" };
@@ -100,7 +104,9 @@ function Login({ setUser }) {
     opacity: darkMode ? 0.04 : 0.04
   }));
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleLogin = async (intent) => {
+    authIntentRef.current = intent;
+    localStorage.setItem('guraneza_auth_intent', intent);
     setLoading(true);
     setError('');
     try {
@@ -122,15 +128,23 @@ function Login({ setUser }) {
       localStorage.setItem('guraneza_token', session.access_token);
       const response = await api.post('/auth/callback', {
         access_token: session.access_token,
+        intent: authIntentRef.current,
         user: { id: session.user.id, email: session.user.email, user_metadata: session.user.user_metadata }
       });
       if (response.data.user) {
+        localStorage.removeItem('guraneza_auth_intent');
         setUser(response.data.user);
         // DIRECT TO HOME PAGE - no profile form
         navigate('/home');
       }
     } catch (error) {
-      setError(t("errorConnecting"));
+      if (error.response?.status === 404 && error.response?.data?.code === 'ACCOUNT_NOT_FOUND') {
+        await supabase.auth.signOut();
+        localStorage.removeItem('guraneza_auth_intent');
+        setError(t("accountNotFound"));
+      } else {
+        setError(error.response?.data?.message || t("errorConnecting"));
+      }
     } finally {
       setLoading(false);
     }
@@ -264,7 +278,7 @@ function Login({ setUser }) {
             )}
 
             {/* Sign In Button */}
-            <button onClick={handleGoogleLogin} disabled={loading}
+            <button onClick={() => handleGoogleLogin('signin')} disabled={loading}
               className="login-btn"
               style={{ width: '100%', padding: '.75rem', borderRadius: 16, border: 'none', background: accentColor, color: '#0a0a14', fontSize: '.85rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.5rem', marginBottom: '.7rem', opacity: loading ? 0.6 : 1 }}
             >
@@ -281,7 +295,7 @@ function Login({ setUser }) {
             </div>
 
             {/* Create Account Button */}
-            <button onClick={handleGoogleLogin} disabled={loading}
+            <button onClick={() => handleGoogleLogin('signup')} disabled={loading}
               className="login-btn"
               style={{ width: '100%', padding: '.75rem', borderRadius: 16, border: `1px solid ${btnOutlineBorder}`, background: glassBg, backdropFilter: 'blur(12px)', color: textColor, fontSize: '.85rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.5rem', marginBottom: '.7rem', opacity: loading ? 0.6 : 1 }}
               onMouseEnter={e => { if (!loading) e.currentTarget.style.borderColor = accentColor; }}

@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from './lib/supabase';
 import api from './lib/api';
 import { useTheme } from './context/ThemeContext';
@@ -26,6 +26,19 @@ import logo from './assets/logo.png';
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
+}
+
+function AuthenticatedRedirect({ user }) {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user && (pathname === '/' || pathname === '/login')) {
+      navigate('/home', { replace: true });
+    }
+  }, [user, pathname, navigate]);
+
   return null;
 }
 
@@ -84,6 +97,7 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
+      <AuthenticatedRedirect user={user} />
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: darkMode ? '#0a0a14' : '#f8fafc', transition: 'background 0.3s' }}>
         <Navbar user={user} setUser={setUser} />
         <main style={{ flex: 1 }}>

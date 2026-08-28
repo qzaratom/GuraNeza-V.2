@@ -49,7 +49,7 @@ app.get('/', (req, res) => res.json({ message: 'GuraNeza API', status: 'running'
 // ============================================
 app.post('/api/auth/callback', async (req, res) => {
     try {
-        const { user } = req.body;
+        const { user, intent = 'signin' } = req.body;
         if (!user || !user.email) return res.status(400).json({ message: 'User data required' });
 
         const { data: existingUser } = await supabaseAdmin.from('users').select('*').eq('email', user.email).maybeSingle();
@@ -59,6 +59,13 @@ app.post('/api/auth/callback', async (req, res) => {
                 google_id: user.id, last_seen: new Date().toISOString()
             }).eq('id', existingUser.id).select('*, subscription_plan:subscription_plan_id(*)').single();
             return res.json({ message: 'Login successful', is_new_user: false, user: updated });
+        }
+
+        if (intent === 'signin') {
+            return res.status(404).json({
+                code: 'ACCOUNT_NOT_FOUND',
+                message: 'No GuraNeza account found. Please choose Create Account.'
+            });
         }
 
         const { data: freePlan } = await supabaseAdmin.from('subscription_plans').select('id').eq('name', 'Free').single();
