@@ -150,7 +150,7 @@ function Landing() {
   useEffect(() => { 
     fetchData(); 
     const startedAt = Date.now();
-    const duration = 3600;
+    const duration = 2800;
     const timer = setInterval(() => {
       const progress = Math.min(100, Math.round(((Date.now() - startedAt) / duration) * 100));
       if (progress >= 100) { setIsLoading(false); clearInterval(timer); }
@@ -228,7 +228,6 @@ function Landing() {
       
       <style>{`
         @keyframes loadingReveal{0%{opacity:0;transform:scale(0)}55%{opacity:1;transform:scale(1.04)}75%,100%{opacity:1;transform:scale(1)}}
-        @keyframes loadingLogo{0%{opacity:0;transform:scale(0)}20%{opacity:1;transform:scale(1.04)}78%{opacity:1;transform:scale(1)}100%{opacity:1;transform:scale(30)}}
         @keyframes loadingProgress{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}
         @keyframes shimmer{0%{opacity:0.3}50%{opacity:0.7}100%{opacity:0.3}}
         .badge-circle{transition:all 0.2s}.badge-circle:hover{transform:scale(1.15)}
@@ -243,6 +242,8 @@ function Landing() {
         @keyframes floatBag{0%{transform:translate3d(0,110vh,0) rotate(-12deg);opacity:0}12%{opacity:.08}50%{transform:translate3d(14px,35vh,0) rotate(8deg)}88%{opacity:.08}100%{transform:translate3d(-10px,-25vh,0) rotate(-6deg);opacity:0}}
         .floating-bag{position:absolute;color:${ac};opacity:0;pointer-events:none;animation:floatBag 14s linear infinite}
         .loading-reveal{animation:loadingReveal 2.8s cubic-bezier(.22,1,.36,1) both;transform-origin:center}
+        @keyframes loadingBag{0%{transform:translate3d(0,115vh,0) rotate(-18deg) scale(.7);opacity:0}10%{opacity:.2}70%{opacity:.13}100%{transform:translate3d(var(--drift),-20vh,0) rotate(20deg) scale(1);opacity:0}}
+        .loading-bag{position:absolute;bottom:0;color:${ac};opacity:0;pointer-events:none;animation:loadingBag 2.4s linear infinite}
         .si::placeholder{color:${darkMode?'rgba(255,255,255,0.4)':'rgba(0,0,0,0.4)'}}
         @media(max-width:640px){.ht{font-size:2.2rem!important}.hd{font-size:.95rem!important}.pg{grid-template-columns:repeat(2,1fr)!important;gap:.5rem!important}.sr{gap:1.5rem!important}.sn{font-size:1.5rem!important}.hide-mobile{display:none!important}.hero-btns-mobile{display:flex!important;flex-direction:column!important;gap:.5rem!important;align-items:center!important}.intro-row{align-items:center!important}.intro-copy{text-align:center!important}.banner-actions{width:min(100%,330px)!important;margin:.75rem auto 0!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:stretch!important;justify-content:center!important;gap:.55rem!important}.banner-actions a{width:100%!important;min-width:0!important;box-sizing:border-box!important;padding:.5rem .35rem!important;font-size:.62rem!important;white-space:nowrap!important;text-align:center!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:.25rem!important}.banner-actions .start-selling-action{grid-column:1/-1!important;grid-row:1!important;justify-self:center!important;width:min(74%,220px)!important}.banner-actions .browse-action{grid-column:1!important;grid-row:2!important}.banner-actions .how-to-sell-action{grid-column:2!important;grid-row:2!important}.marketplace-row{justify-content:center!important}.search-heading{font-size:1.15rem!important;text-align:center!important;margin-bottom:.55rem!important}.search-tools>div{padding:.65rem .75rem .8rem!important}.search-tools input{font-size:.8rem!important}.category-actions{justify-content:flex-start!important;gap:.3rem!important;padding-top:.55rem!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important}.category-actions::-webkit-scrollbar{display:none!important}.category-actions button{flex:0 0 auto!important;padding:.3rem .6rem!important;font-size:.62rem!important}}
         @media(min-width:1101px){.pg2{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:1rem!important}}
@@ -263,9 +264,22 @@ function Landing() {
       {/* Loading Screen */}
       {isLoading && (
         <div style={{ position:'fixed',inset:0,zIndex:9999,display:'flex',alignItems:'center',justifyContent:'center',background:loadingBg }}>
+          <div aria-hidden="true" style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none' }}>
+            <FiShoppingBag className="loading-bag" size={22} style={{ left:'3%', '--drift':'18px', animationDelay:'-0.2s' }}/>
+            <FiShoppingBag className="loading-bag" size={28} style={{ left:'11%', '--drift':'-14px', animationDelay:'-1.2s' }}/>
+            <FiShoppingBag className="loading-bag" size={18} style={{ left:'19%', '--drift':'22px', animationDelay:'-0.7s' }}/>
+            <FiShoppingBag className="loading-bag" size={32} style={{ left:'28%', '--drift':'-20px', animationDelay:'-1.8s' }}/>
+            <FiShoppingBag className="loading-bag" size={20} style={{ left:'37%', '--drift':'16px', animationDelay:'-0.4s' }}/>
+            <FiShoppingBag className="loading-bag" size={26} style={{ left:'46%', '--drift':'-12px', animationDelay:'-1.5s' }}/>
+            <FiShoppingBag className="loading-bag" size={18} style={{ left:'55%', '--drift':'20px', animationDelay:'-2s' }}/>
+            <FiShoppingBag className="loading-bag" size={30} style={{ left:'64%', '--drift':'-18px', animationDelay:'-0.9s' }}/>
+            <FiShoppingBag className="loading-bag" size={21} style={{ left:'73%', '--drift':'14px', animationDelay:'-1.7s' }}/>
+            <FiShoppingBag className="loading-bag" size={28} style={{ left:'82%', '--drift':'-22px', animationDelay:'-0.5s' }}/>
+            <FiShoppingBag className="loading-bag" size={19} style={{ left:'91%', '--drift':'16px', animationDelay:'-1.1s' }}/>
+          </div>
           <div style={{ position:'relative',textAlign:'center',zIndex:1 }}>
             <div style={{ position:'relative',width:150,height:150,margin:'0 auto -4px' }}>
-              <div style={{ position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center' }}><img src={logo} alt="" style={{ width:120,height:120,objectFit:'contain',animation:'loadingLogo 3.6s cubic-bezier(.22,1,.36,1) both' }}/></div>
+              <div className="loading-reveal" style={{ position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center' }}><img src={logo} alt="" style={{ width:120,height:120,objectFit:'contain' }}/></div>
             </div>
             <h1 className="loading-reveal" style={{ fontSize:'1.65rem',fontWeight:800,color:loadingTc,letterSpacing:'0.06em',margin:0 }}>GURA<span style={{ color:ac }}>NEZA</span></h1>
             <p className="loading-reveal" style={{ fontSize:'0.8rem',color:loadingTm,fontWeight:300,margin:'6px 0 18px' }}>BuySmart</p>
