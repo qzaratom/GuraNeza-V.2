@@ -4,7 +4,6 @@ import { supabase } from '../lib/supabase';
 import api from '../lib/api';
 import { useTheme } from '../context/ThemeContext';
 import logo from '../assets/logo.png';
-import vennLogo from '../assets/venn.png';
 import videoGif from '../assets/video.gif';
 
 const translations = {
@@ -184,18 +183,14 @@ function Login({ setUser }) {
         </div>
         <div style={{ position: 'relative', textAlign: 'center', zIndex: 1, padding: '1rem' }}>
           <style>{`@keyframes authReveal{0%{opacity:0;transform:scale(0)}55%{opacity:1;transform:scale(1.04)}75%,100%{opacity:1;transform:scale(1)}}@keyframes authBagRise{0%{transform:translate3d(0,115vh,0) rotate(-18deg) scale(.7);opacity:0}8%{opacity:.78}88%{opacity:.68}100%{transform:translate3d(var(--drift),-20vh,0) rotate(20deg) scale(1);opacity:0}}@keyframes authProgress{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}.auth-loading-reveal{animation:authReveal 2.8s cubic-bezier(.22,1,.36,1) both;transform-origin:center}.auth-loading-bag{position:absolute;bottom:0;color:#00E309;opacity:0;pointer-events:none;animation:authBagRise 2.25s linear infinite}.auth-loading-progress{animation:authProgress 2.8s cubic-bezier(.22,1,.36,1) both}`}</style>
-          <div className="auth-loading-reveal" style={{ position: 'relative', width: 150, height: 150, margin: '0 auto -4px' }}>
-            <img src={logo} alt="" style={{ width: 120, height: 120, objectFit: 'contain' }} />
+          <div className="auth-loading-reveal" style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'.55rem', margin:'0 auto .5rem' }}>
+            <img src={logo} alt="" style={{ width: 74, height: 74, objectFit: 'contain' }} />
+            <h1 style={{ fontSize: '1.65rem', fontWeight: 800, color: loadingTextColor, letterSpacing: '0.06em', margin: 0 }}>GURA<span style={{ color: '#00E309' }}>NEZA</span></h1>
           </div>
-          <h1 className="auth-loading-reveal" style={{ fontSize: '1.65rem', fontWeight: 800, color: loadingTextColor, letterSpacing: '0.06em', margin: 0 }}>GURA<span style={{ color: '#00E309' }}>NEZA</span></h1>
           <p className="auth-loading-reveal" style={{ fontSize: '0.8rem', color: loadingTextMuted, fontWeight: 300, margin: '6px 0 18px' }}>BuySmart</p>
           <div aria-hidden="true" style={{ width: 116, height: 3, margin: '0 auto', borderRadius: 3, background: darkMode ? 'rgba(255,255,255,.12)' : 'rgba(0,0,0,.1)', overflow: 'hidden' }}>
             <div className="auth-loading-progress" style={{ width: '100%', height: '100%', borderRadius: 3, background: '#00E309', transformOrigin: 'left' }} />
           </div>
-        </div>
-        <div className="auth-loading-reveal" style={{ position:'absolute',bottom:'7%',left:0,right:0,display:'flex',alignItems:'center',justifyContent:'center',gap:'.45rem',whiteSpace:'nowrap' }}>
-          <img src={vennLogo} alt="VeNN" style={{ width:38,height:38,objectFit:'contain' }} />
-          <span style={{ color:'#f0445f',fontSize:'.78rem',fontWeight:800,letterSpacing:'.04em' }}>VeNN</span>
         </div>
       </div>
     );
