@@ -150,7 +150,7 @@ function Landing() {
   useEffect(() => { 
     fetchData(); 
     const startedAt = Date.now();
-    const duration = 2800;
+    const duration = 3600;
     const timer = setInterval(() => {
       const progress = Math.min(100, Math.round(((Date.now() - startedAt) / duration) * 100));
       if (progress >= 100) { setIsLoading(false); clearInterval(timer); }
@@ -228,6 +228,7 @@ function Landing() {
       
       <style>{`
         @keyframes loadingReveal{0%{opacity:0;transform:scale(0)}55%{opacity:1;transform:scale(1.04)}75%,100%{opacity:1;transform:scale(1)}}
+        @keyframes loadingLogo{0%{opacity:0;transform:scale(0)}20%{opacity:1;transform:scale(1.04)}78%{opacity:1;transform:scale(1)}100%{opacity:1;transform:scale(30)}}
         @keyframes loadingProgress{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}
         @keyframes shimmer{0%{opacity:0.3}50%{opacity:0.7}100%{opacity:0.3}}
         .badge-circle{transition:all 0.2s}.badge-circle:hover{transform:scale(1.15)}
@@ -264,7 +265,7 @@ function Landing() {
         <div style={{ position:'fixed',inset:0,zIndex:9999,display:'flex',alignItems:'center',justifyContent:'center',background:loadingBg }}>
           <div style={{ position:'relative',textAlign:'center',zIndex:1 }}>
             <div style={{ position:'relative',width:150,height:150,margin:'0 auto -4px' }}>
-              <div className="loading-reveal" style={{ position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center' }}><img src={logo} alt="" style={{ width:150,height:150,objectFit:'contain' }}/></div>
+              <div style={{ position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center' }}><img src={logo} alt="" style={{ width:120,height:120,objectFit:'contain',animation:'loadingLogo 3.6s cubic-bezier(.22,1,.36,1) both' }}/></div>
             </div>
             <h1 className="loading-reveal" style={{ fontSize:'1.65rem',fontWeight:800,color:loadingTc,letterSpacing:'0.06em',margin:0 }}>GURA<span style={{ color:ac }}>NEZA</span></h1>
             <p className="loading-reveal" style={{ fontSize:'0.8rem',color:loadingTm,fontWeight:300,margin:'6px 0 18px' }}>BuySmart</p>
