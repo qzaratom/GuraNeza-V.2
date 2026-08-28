@@ -228,7 +228,7 @@ function Landing() {
       
       <style>{`
         @keyframes zoomReveal{0%{transform:scale(.04);opacity:0}18%{transform:scale(.04);opacity:1}42%{transform:scale(1);opacity:1}62%{transform:scale(1);opacity:1}84%{transform:scale(8);opacity:.9}100%{transform:scale(28);opacity:0}}
-        @keyframes loadingEntrance{0%{opacity:0;transform:scale(.04)}18%{opacity:1;transform:scale(.04)}42%{opacity:1;transform:scale(1)}100%{opacity:1;transform:scale(1)}}
+        @keyframes loadingEntrance{0%{opacity:0;transform:scale(.04)}18%{opacity:1;transform:scale(.04)}42%{opacity:1;transform:scale(1)}62%{opacity:1;transform:scale(1)}84%{opacity:.9;transform:scale(.88)}100%{opacity:0;transform:scale(.35)}}
         @keyframes loadingAccent{0%,62%{color:${ac}}72%,100%{color:#000}}
         @keyframes loadingBag{0%{transform:translate3d(0,115vh,0) rotate(-12deg);opacity:0}10%{opacity:.12}100%{transform:translate3d(18px,-25vh,0) rotate(12deg);opacity:0}}
         @keyframes shimmer{0%{opacity:0.3}50%{opacity:0.7}100%{opacity:0.3}}
