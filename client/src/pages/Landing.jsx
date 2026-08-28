@@ -228,6 +228,7 @@ function Landing() {
       
       <style>{`
         @keyframes loadingReveal{0%{opacity:0;transform:scale(0)}55%{opacity:1;transform:scale(1.04)}75%,100%{opacity:1;transform:scale(1)}}
+        @keyframes loadingProgress{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}
         @keyframes shimmer{0%{opacity:0.3}50%{opacity:0.7}100%{opacity:0.3}}
         .badge-circle{transition:all 0.2s}.badge-circle:hover{transform:scale(1.15)}
         .badge-tooltip{position:absolute;left:22px;top:50%;transform:translateY(-50%);padding:3px 8px;border-radius:5px;font-size:0.5rem;font-weight:700;white-space:nowrap;opacity:0;visibility:hidden;transition:all 0.15s;pointer-events:none;z-index:20}
@@ -262,11 +263,14 @@ function Landing() {
       {isLoading && (
         <div style={{ position:'fixed',inset:0,zIndex:9999,display:'flex',alignItems:'center',justifyContent:'center',background:loadingBg }}>
           <div style={{ position:'relative',textAlign:'center',zIndex:1 }}>
-            <div style={{ position:'relative',width:174,height:174,margin:'0 auto -2px' }}>
+            <div style={{ position:'relative',width:150,height:150,margin:'0 auto -4px' }}>
               <div className="loading-reveal" style={{ position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center' }}><img src={logo} alt="" style={{ width:150,height:150,objectFit:'contain' }}/></div>
             </div>
             <h1 className="loading-reveal" style={{ fontSize:'1.65rem',fontWeight:800,color:loadingTc,letterSpacing:'0.06em',margin:0 }}>GURA<span style={{ color:ac }}>NEZA</span></h1>
             <p className="loading-reveal" style={{ fontSize:'0.8rem',color:loadingTm,fontWeight:300,margin:'6px 0 18px' }}>BuySmart</p>
+            <div aria-hidden="true" style={{ width:116,height:3,margin:'0 auto',borderRadius:3,background:darkMode?'rgba(255,255,255,.12)':'rgba(0,0,0,.1)',overflow:'hidden' }}>
+              <div style={{ width:'100%',height:'100%',borderRadius:3,background:ac,transformOrigin:'left',animation:'loadingProgress 2.8s cubic-bezier(.22,1,.36,1) both' }} />
+            </div>
           </div>
         </div>
       )}
