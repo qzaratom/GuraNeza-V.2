@@ -79,7 +79,7 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(0);
-  const limit = 12;
+  const limit = 50;
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [minPrice, setMinPrice] = useState("");
@@ -189,12 +189,15 @@ function Home() {
         .filter-modal { box-sizing: border-box; }
         .filter-modal * { box-sizing: border-box; }
         @media (max-width: 768px) { 
-          .product-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; } 
+          .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 8px !important; } 
           .product-card-pad { padding: 8px !important; }
           .scroll-top-desktop { display: none !important; }
           .scroll-top-mobile { display: flex !important; }
           .filter-modal { width: 92% !important; maxWidth: 360px !important; padding: 1rem !important; }
         }
+        @media (min-width: 641px) and (max-width: 800px) { .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 12px !important; } }
+        @media (min-width: 801px) and (max-width: 1100px) { .product-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 16px !important; } }
+        @media (min-width: 1101px) { .product-grid { grid-template-columns: repeat(6, minmax(0, 1fr)) !important; gap: 16px !important; } }
         @media (min-width: 769px) {
           .scroll-top-mobile { display: none !important; }
           .scroll-top-desktop { display: flex !important; }
@@ -332,7 +335,7 @@ function Home() {
         {/* Products Grid */}
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 12px 40px', width: '100%' }}>
           {loading && products.length === 0 ? (
-            <div className="product-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '12px' }}>
+            <div className="product-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(6, minmax(0, 1fr))', gap: '16px' }}>
               {[...Array(8)].map((_, i) => <SkeletonCard key={i} darkMode={darkMode} />)}
             </div>
           ) : products.length === 0 ? (
@@ -343,7 +346,7 @@ function Home() {
             </div>
           ) : (
             <>
-              <div className="product-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '12px' }}>
+              <div className="product-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(6, minmax(0, 1fr))', gap: '16px' }}>
                 {products.map(product => {
                   const sellerBadges = getSellerBadges(product.seller, product.product_type);
                   return (
