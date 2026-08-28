@@ -242,8 +242,8 @@ function Landing() {
         @keyframes floatBag{0%{transform:translate3d(0,110vh,0) rotate(-12deg);opacity:0}12%{opacity:.08}50%{transform:translate3d(14px,35vh,0) rotate(8deg)}88%{opacity:.08}100%{transform:translate3d(-10px,-25vh,0) rotate(-6deg);opacity:0}}
         .floating-bag{position:absolute;color:${ac};opacity:0;pointer-events:none;animation:floatBag 14s linear infinite}
         .loading-reveal{animation:loadingReveal 2.8s cubic-bezier(.22,1,.36,1) both;transform-origin:center}
-        @keyframes loadingBag{0%{transform:translate3d(0,115vh,0) rotate(-18deg) scale(.7);opacity:0}10%{opacity:.48}70%{opacity:.32}100%{transform:translate3d(var(--drift),-20vh,0) rotate(20deg) scale(1);opacity:0}}
-        .loading-bag{position:absolute;bottom:0;color:${ac};opacity:0;pointer-events:none;animation:loadingBag 2.4s linear infinite}
+        @keyframes loadingBag{0%{transform:translate3d(0,115vh,0) rotate(-18deg) scale(.7);opacity:0}8%{opacity:.78}88%{opacity:.68}100%{transform:translate3d(var(--drift),-20vh,0) rotate(20deg) scale(1);opacity:0}}
+        .loading-bag{position:absolute;bottom:0;color:${ac};opacity:0;pointer-events:none;animation:loadingBag 2.25s linear infinite}
         .si::placeholder{color:${darkMode?'rgba(255,255,255,0.4)':'rgba(0,0,0,0.4)'}}
         @media(max-width:640px){.ht{font-size:2.2rem!important}.hd{font-size:.95rem!important}.pg{grid-template-columns:repeat(2,1fr)!important;gap:.5rem!important}.sr{gap:1.5rem!important}.sn{font-size:1.5rem!important}.hide-mobile{display:none!important}.hero-btns-mobile{display:flex!important;flex-direction:column!important;gap:.5rem!important;align-items:center!important}.intro-row{align-items:center!important}.intro-copy{text-align:center!important}.banner-actions{width:min(100%,330px)!important;margin:.75rem auto 0!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:stretch!important;justify-content:center!important;gap:.55rem!important}.banner-actions a{width:100%!important;min-width:0!important;box-sizing:border-box!important;padding:.5rem .35rem!important;font-size:.62rem!important;white-space:nowrap!important;text-align:center!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:.25rem!important}.banner-actions .start-selling-action{grid-column:1/-1!important;grid-row:1!important;justify-self:center!important;width:min(74%,220px)!important}.banner-actions .browse-action{grid-column:1!important;grid-row:2!important}.banner-actions .how-to-sell-action{grid-column:2!important;grid-row:2!important}.marketplace-row{justify-content:center!important}.search-heading{font-size:1.15rem!important;text-align:center!important;margin-bottom:.55rem!important}.search-tools>div{padding:.65rem .75rem .8rem!important}.search-tools input{font-size:.8rem!important}.category-actions{justify-content:flex-start!important;gap:.3rem!important;padding-top:.55rem!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important}.category-actions::-webkit-scrollbar{display:none!important}.category-actions button{flex:0 0 auto!important;padding:.3rem .6rem!important;font-size:.62rem!important}}
         @media(min-width:1101px){.pg2{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:1rem!important}}
@@ -276,6 +276,16 @@ function Landing() {
             <FiShoppingBag className="loading-bag" size={21} style={{ left:'73%', '--drift':'14px', animationDelay:'-1.7s' }}/>
             <FiShoppingBag className="loading-bag" size={28} style={{ left:'82%', '--drift':'-22px', animationDelay:'-0.5s' }}/>
             <FiShoppingBag className="loading-bag" size={19} style={{ left:'91%', '--drift':'16px', animationDelay:'-1.1s' }}/>
+            <FiShoppingBag className="loading-bag" size={46} style={{ left:'7%', '--drift':'-26px', animationDelay:'-1.9s' }}/>
+            <FiShoppingBag className="loading-bag" size={54} style={{ left:'24%', '--drift':'24px', animationDelay:'-0.8s' }}/>
+            <FiShoppingBag className="loading-bag" size={40} style={{ left:'42%', '--drift':'-28px', animationDelay:'-2.1s' }}/>
+            <FiShoppingBag className="loading-bag" size={62} style={{ left:'58%', '--drift':'26px', animationDelay:'-1.3s' }}/>
+            <FiShoppingBag className="loading-bag" size={48} style={{ left:'76%', '--drift':'-24px', animationDelay:'-0.3s' }}/>
+            <FiShoppingBag className="loading-bag" size={36} style={{ left:'96%', '--drift':'-18px', animationDelay:'-1.6s' }}/>
+            <FiShoppingBag className="loading-bag" size={24} style={{ left:'15%', '--drift':'30px', animationDelay:'-2.2s' }}/>
+            <FiShoppingBag className="loading-bag" size={34} style={{ left:'34%', '--drift':'-16px', animationDelay:'-1s' }}/>
+            <FiShoppingBag className="loading-bag" size={20} style={{ left:'69%', '--drift':'18px', animationDelay:'-1.9s' }}/>
+            <FiShoppingBag className="loading-bag" size={26} style={{ left:'87%', '--drift':'-26px', animationDelay:'-0.1s' }}/>
           </div>
           <div style={{ position:'relative',textAlign:'center',zIndex:1 }}>
             <div style={{ position:'relative',width:150,height:150,margin:'0 auto -4px' }}>
