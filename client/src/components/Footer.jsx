@@ -5,7 +5,7 @@ import { FaTiktok, FaInstagram } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import { useTheme } from '../context/ThemeContext';
 import logo from '../assets/logo.png';
-import linkupLogo from '../assets/linkup.png';
+import vennLogo from '../assets/venn.png';
 
 function Footer() {
   const location = useLocation();
@@ -143,17 +143,10 @@ function Footer() {
         }}>
           <span>&copy; 2026 GuraNeza. All rights reserved.</span>
           
-          {/* LinkUp */}
+          {/* VENN */}
           <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-            <span>A</span>
-            <a href="https://www.LinkUp.com" target="_blank" rel="noopener noreferrer" 
-              style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: textMuted, textDecoration: 'none', transition: 'color 0.2s' }}
-              onMouseEnter={e => e.target.style.color = accentColor}
-              onMouseLeave={e => e.target.style.color = textMuted}>
-              <img src={linkupLogo} alt="LinkUp" style={{ width: 28, height: 28, objectFit: 'contain' }} />
-              <span style={{ fontWeight: 500, fontSize: '0.75rem' }}>LinkUp</span>
-            </a>
-            <span>product</span>
+            <img src={vennLogo} alt="VeNN" style={{ width: 28, height: 28, objectFit: 'contain' }} />
+            <span style={{ fontWeight: 600, fontSize: '0.7rem', letterSpacing: '0.02em' }}>A VENN DIAGRAM PRODUCT</span>
           </span>
         </div>
       </div>

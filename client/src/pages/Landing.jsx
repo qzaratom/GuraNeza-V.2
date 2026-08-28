@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import api from '../lib/api';
 import { useTheme } from '../context/ThemeContext';
 import logo from '../assets/logo.png';
+import vennLogo from '../assets/venn.png';
 import bannerImage from '../assets/barner.png';
 import { 
   FiSearch, FiStar, FiShield, FiCheck, FiDollarSign, FiClock, FiEye, FiHeart,
@@ -296,6 +297,10 @@ function Landing() {
             <div aria-hidden="true" style={{ width:116,height:3,margin:'0 auto',borderRadius:3,background:darkMode?'rgba(255,255,255,.12)':'rgba(0,0,0,.1)',overflow:'hidden' }}>
               <div style={{ width:'100%',height:'100%',borderRadius:3,background:ac,transformOrigin:'left',animation:'loadingProgress 2.8s cubic-bezier(.22,1,.36,1) both' }} />
             </div>
+          </div>
+          <div className="loading-reveal" style={{ position:'absolute',bottom:'7%',left:0,right:0,display:'flex',alignItems:'center',justifyContent:'center',gap:'0.45rem',whiteSpace:'nowrap' }}>
+            <img src={vennLogo} alt="VeNN" style={{ width:38,height:38,objectFit:'contain' }} />
+            <span style={{ color:'#f0445f',fontSize:'0.78rem',fontWeight:800,letterSpacing:'0.04em' }}>VeNN</span>
           </div>
         </div>
       )}
