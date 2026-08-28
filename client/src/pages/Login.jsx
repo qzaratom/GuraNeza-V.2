@@ -328,7 +328,10 @@ function Login({ setUser }) {
 
         {/* Terms */}
         <p style={{ textAlign: 'center', marginTop: '1rem', marginBottom: '2rem', fontSize: '.55rem', color: textMuted, fontWeight: 300, padding: '0 0.5rem' }}>
-          {t("termsText")}
+          By continuing, you agree to our{' '}
+          <Link to="/terms" style={{ color: accentColor, textDecoration: 'none' }}>Terms of Service</Link>{' '}
+          and{' '}
+          <Link to="/terms#privacy" style={{ color: accentColor, textDecoration: 'none' }}>Privacy Policy</Link>
         </p>
       </div>
     </div>

@@ -12,6 +12,7 @@ function Footer() {
   const { darkMode } = useTheme();
   
   if (location.pathname.startsWith('/admin')) return null;
+  if (location.pathname === '/login') return null;
   
   const accentColor = '#00E309';
   const bgColor = darkMode ? '#0a0a14' : '#ffffff';

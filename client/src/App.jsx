@@ -21,6 +21,7 @@ import Tickets from './pages/Tickets';
 import Sell from './pages/Sell';
 import MyProducts from './pages/MyProducts';
 import Admin from './pages/Admin';
+import Terms from './pages/Terms';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -81,6 +82,7 @@ function App() {
             {/* Public Routes */}
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login setUser={setUser} />} />
+            <Route path="/terms" element={<Terms />} />
             
             {/* Protected Routes */}
             <Route path="/home" element={<Home />} />
